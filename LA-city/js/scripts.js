@@ -30,21 +30,12 @@ let poly
 let points
 let popup
 let popupValue
-let popupCoords
 
 // create map instance
 window.opalSdk
   .createMap(authenticator, options)
   .then(onCreate)
   .then(mapInstance => {
-
-    fetch('tourism_polygon.geojson')
-      .then(response => response.json())
-      .then(data => {
-        poly = window.opalSdk.createDataset('poly', {
-          data: data,
-        })
-      })
 
     fetch('tourism_point.geojson')
       .then(response => response.json())
@@ -56,16 +47,6 @@ window.opalSdk
 
     mapInstance.event$.subscribe((event) => {
       if (event.type === 'load') {
-
-        mapInstance.addData(poly, {
-          id: 'poly',
-          type: 'fill',
-          paint: {
-            'fill-color': 'black',
-            'fill-opacity': 0.5,
-          },
-          // layout: { "filter": ["in", "tourism", ...['asdasd']] }
-        })
 
         const images = [
           { url: 'images/icon1.png', id: 'icon1' },
@@ -170,27 +151,12 @@ window.opalSdk
 
       if (event.type === 'mousemove') {
         const coords = event.data.point
-        const layers = ['poly', 'points']
+        const layers = ['points']
         const target = mapInstance.query(coords, { layers })
         if (target.length >= 1) {
-          popupCoords = target[0].geometry.coordinates
-
-          if (target[0].layer.id === 'poly') {
-            popupCoords = [event.data.lngLat.lng, event.data.lngLat.lat]
-            mapInstance.layer(target[0].layer.id).setPaintProperty('fill-color', [
-              'match',
-              ['get', 'id'],
-              target[0].properties.id,
-              'red',
-              'black'
-            ])
-          }
           if (popupValue != target[0].properties.name) {
-            popupValue = target[0].properties.name
-          }
-
-          if (popupValue) {
             if (popup) { popup.remove() }
+            popupValue = target[0].properties.name
             popupValue
               ?
               (popup = window.opalSdk
@@ -198,7 +164,7 @@ window.opalSdk
                   closeButton: false,
                   closeOnClick: false,
                 })
-                .setLngLat(popupCoords)
+                .setLngLat(target[0].geometry.coordinates)
                 .setHTML(
                   `<div style="font-size: 14px; font-weight: bold;">${popupValue
                   }</div>`
@@ -208,12 +174,9 @@ window.opalSdk
             mapInstance.addPopup(popup)
           }
           mapInstance.canvas.style.cursor = 'pointer'
-
-        } else {
-
-          mapInstance.layer('poly').setPaintProperty('fill-color', 'black')
-
+        } else if (target.length === 0) {
           mapInstance.canvas.style.cursor = 'default'
+
           if (popup || popupValue) {
             popup.remove()
             popup = null
