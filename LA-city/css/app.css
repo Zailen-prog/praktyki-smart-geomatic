@@ -1,0 +1,8 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Lato",sans-serif;
+    --text-color: #404040;
+    font-size: 14px;
+    display: block;
+}
