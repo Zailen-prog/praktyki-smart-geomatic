@@ -12,7 +12,7 @@
     font-size: 14px;
     color: var(--text-color);
     min-width: 200px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 

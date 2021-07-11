@@ -1,0 +1,15 @@
+#click_properties{
+    position: absolute;
+    left: -480px;
+    height: 100%;
+    width: 100%;
+    max-width: 480px;
+    z-index: 15;
+    background: hsla(0,0%,100%,1);
+    box-shadow: 0 3px 2px 0 #a1a1a1;
+    font-size: 14px;
+    color: var(--text-color);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: 0.3s ease-out;
+}
