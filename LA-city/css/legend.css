@@ -44,3 +44,17 @@
     width: 26px;
     margin-right: 10px;
 }
+
+.Legend_container::-webkit-scrollbar{
+	width: 8px;
+	background:transparent;
+}
+
+.Legend_container:hover::-webkit-scrollbar-thumb{
+	background-color: rgb(204, 204, 204);
+}
+
+.Legend_container::-webkit-scrollbar-thumb{
+	border-radius: 8px;
+	background-color: transparent;
+}

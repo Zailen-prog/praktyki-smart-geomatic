@@ -77,3 +77,17 @@
 #click-properties-close :last-child{
     transform: translate(-50%,-50%) rotate(-45deg);
 }
+
+#click-properties-container::-webkit-scrollbar{
+	width: 8px;
+	background:transparent;
+}
+
+#click-properties-container:hover::-webkit-scrollbar-thumb{
+	background-color: rgb(204, 204, 204);
+}
+
+#click-properties-container::-webkit-scrollbar-thumb{
+	border-radius: 8px;
+	background-color: transparent;
+}
