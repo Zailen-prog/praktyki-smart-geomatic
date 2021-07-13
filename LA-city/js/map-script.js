@@ -28,7 +28,7 @@ function onError(error) {
   console.log("oups! something goes wrong", error);
 }
 
-let points
+let geoData
 let popup
 let popupValue
 
@@ -40,6 +40,13 @@ window.opalSdk
 
     mapInstance.event$.subscribe((event) => {
       if (event.type === 'load') {
+
+        const close_button = document.getElementById('click-properties-close')
+
+        close_button.addEventListener('click', function () {
+          on_click_container.style.left = "-480px"
+          mapInstance.layer('points_clicked').hide()
+        })
 
         const icons = [
           { url: 'images/icons/icon1.png', id: 'icon1' },
@@ -76,17 +83,20 @@ window.opalSdk
           { url: 'images/icons_clicked/icon14.png', id: 'icon14_clicked' },
           { url: 'images/icons_clicked/icon15.png', id: 'icon15_clicked' },
         ]
-        icons_clicked.map(img => {
-          fetch(img.url)
-            .then(response => response.arrayBuffer())
-            .then(data => {
-              const blob = new window.Blob([new Uint8Array(data)], {
-                type: 'image/png',
+        const promised = Promise.all(
+          icons_clicked.map(img => new Promise((resolve, reject) => {
+            fetch(img.url)
+              .then(response => response.arrayBuffer())
+              .then(data => {
+                const blob = new window.Blob([new Uint8Array(data)], {
+                  type: 'image/png',
+                })
+                return window.createImageBitmap(blob)
               })
-              return window.createImageBitmap(blob)
-            })
-            .then(image => mapInstance.images().add(img.id, image))
-        })
+              .then(image => mapInstance.images().add(img.id, image))
+            resolve();
+          }))
+        )
 
         Promise.all(
           icons.map(img => new Promise((resolve, reject) => {
@@ -107,197 +117,102 @@ window.opalSdk
               .then(response => response.json())
               .then(data => {
                 for (var i = 0; i < data.features.length; i++) {
+                  var icon_nr
+                  switch (data.features[i].properties.tourism) {
+                    case 'apartment':
+                      icon_nr = 1;
+                      break;
+                    case 'aquarium':
+                      icon_nr = 2;
+                      break;
+                    case 'artwork':
+                      icon_nr = 3;
+                      break;
+                    case 'attraction':
+                      icon_nr = 4;
+                      break;
+                    case 'camp_site':
+                      icon_nr = 5;
+                      break;
+                    case 'caravan_site':
+                      icon_nr = 12;
+                      break;
+                    case 'chalet': case 'guest_house': case 'hostel': case 'hotel': case 'motel':
+                      icon_nr = 9;
+                      break;
+                    case 'gallery':
+                      icon_nr = 6;
+                      break;
+                    case 'historic':
+                      icon_nr = 7;
+                      break;
+                    case 'information':
+                      icon_nr = 8;
+                      break;
+                    case 'museum':
+                      icon_nr = 11;
+                      break;
+                    case 'picnic_site': case 'picnic_table':
+                      icon_nr = 10;
+                      break;
+                    case 'viewpoint':
+                      icon_nr = 13;
+                      break;
+                    case 'zoo':
+                      icon_nr = 14;
+                      break;
+                    default:
+                      icon_nr = 15
+                  }
+                  data.features[i].properties.icon = "icon" + icon_nr;
                   data.features[i].properties.id = i;
                 }
                 return data
               })
               .then(data => {
-                points = window.opalSdk.createDataset('points', {
+                geoData = data
+                return window.opalSdk.createDataset('points', {
                   data: data,
                   cluster: true,
                   clusterMaxZoom: 14,
                   clusterRadius: 80,
                 })
-
-                return points
               })
               .then(dataset => {
-                mapInstance.addData(dataset, {
-                  id: 'clusters-points',
-                  type: 'circle',
-                  filter: ['has', 'point_count'],
-                  paint: {
-                    'circle-color': '#CA2400',
-                    'circle-radius': [
-                      'step',
-                      ['get', 'point_count'],
-                      20,
-                      5,
-                      //
-                      22.5,
-                      10,
-                      //
-                      25,
-                      25,
-                      //
-                      30,
-                      50,
-                      //
-                      35,
-                      75,
-                      //
-                      40,
-                      100,
-                      //
-                      45,
-                      150,
-                      //
-                      50,
-                      200,
-                      //
-                      55,
-                      250,
-                      //
-                      65,
-                      400,
-                      //
-                      70
-                    ],
-                    'circle-stroke-width': 1,
-                    'circle-stroke-color': '#fff',
-                  }
-                })
+                createLayers(mapInstance, dataset)
 
-                mapInstance.addData(dataset, {
-                  id: 'clusters-points-count',
-                  type: 'symbol',
-                  filter: ['has', 'point_count'],
-                  layout: {
-                    'text-field': '{point_count_abbreviated}',
-                    'text-font': ['Roboto Bold'],
-                    'text-size': 14,
-                    'text-offset': [0, 0.15],
-                  },
-                  paint: {
-                    'text-color': '#ffffff',
-                  },
-                })
-
-                mapInstance.addData(dataset, {
-                  id: 'points',
-                  type: 'symbol',
-                  filter: ["all",
-                    ['!', ['has', 'point_count']],
-                    // ["in", "tourism", ...['asdasd']],
-                  ],
-                  layout: {
-                    'icon-allow-overlap': true,
-                    'icon-image': [
-                      'match',
-                      ['get', 'tourism'],
-                      'apartment',
-                      'icon1',
-                      'aquarium',
-                      'icon2',
-                      'artwork',
-                      'icon3',
-                      'attraction',
-                      'icon4',
-                      'camp_site',
-                      'icon5',
-                      'caravan_site',
-                      'icon12',
-                      'chalet',
-                      'icon9',
-                      'gallery',
-                      'icon6',
-                      'guest_house',
-                      'icon9',
-                      'historic',
-                      'icon7',
-                      'hostel',
-                      'icon9',
-                      'hotel',
-                      'icon9',
-                      'information',
-                      'icon8',
-                      'motel',
-                      'icon9',
-                      'museum',
-                      'icon11',
-                      'picnic_site',
-                      'icon10',
-                      'picnic_table',
-                      'icon10',
-                      'viewpoint',
-                      'icon13',
-                      'zoo',
-                      'icon14',
-                      'icon15',
-                    ],
-                    'icon-size': 0.6,
-                  },
-                }) // end mapInstance.addData(points
-
-                const p_clicked_p = new Promise((resolve, reject) => {
-                  mapInstance.addData(points, {
-                    id: 'points_clicked',
-                    type: 'symbol',
-                    filter: ["all",
-                      ['!', ['has', 'point_count']],
-                      // ["==", "$geometry-coordinates", target[0].geometry.coordinates],
-                    ],
-                    layout: {
-                      'icon-allow-overlap': true,
-                      'icon-image': [
-                        'match',
-                        ['get', 'tourism'],
-                        'apartment',
-                        'icon1_clicked',
-                        'aquarium',
-                        'icon2_clicked',
-                        'artwork',
-                        'icon3_clicked',
-                        'attraction',
-                        'icon4_clicked',
-                        'camp_site',
-                        'icon5_clicked',
-                        'caravan_site',
-                        'icon12_clicked',
-                        'chalet',
-                        'icon9_clicked',
-                        'gallery',
-                        'icon6_clicked',
-                        'guest_house',
-                        'icon9_clicked',
-                        'historic',
-                        'icon7_clicked',
-                        'hostel',
-                        'icon9_clicked',
-                        'hotel',
-                        'icon9_clicked',
-                        'information',
-                        'icon8_clicked',
-                        'motel',
-                        'icon9_clicked',
-                        'museum',
-                        'icon11_clicked',
-                        'picnic_site',
-                        'icon10_clicked',
-                        'picnic_table',
-                        'icon10_clicked',
-                        'viewpoint',
-                        'icon13_clicked',
-                        'zoo',
-                        'icon14_clicked',
-                        'icon15_clicked',
+                promised.then(() => {
+                  new Promise((resolve, reject) => {
+                    mapInstance.addData(dataset, {
+                      id: 'points_clicked',
+                      type: 'symbol',
+                      filter: ["all",
+                        ['!', ['has', 'point_count']],
                       ],
-                      'icon-size': 0.6,
-                    },
+                      layout: {
+                        'icon-allow-overlap': true,
+                        'icon-image': ["concat", ['get', 'icon'], "_clicked"],
+                        'icon-size': 0.6,
+                      },
+                    })
+                    resolve();
+                  }).then(() => {
+                    mapInstance.layer('points_clicked').hide();
                   })
-                  resolve();
-                }).then(() => {
-                  mapInstance.layer('points_clicked').hide();
+                })
+
+                document.querySelectorAll('.properties-panel-menu-input').forEach((input) => {
+                  input.addEventListener('change', function () {
+                    if (input.checked) {
+                      if (input.value === 'all') {
+                        filterData(geoData, null)
+                        dataset.setData(filterData(geoData, null));
+                      } else {
+                        filterData(geoData, input.value)
+                        dataset.setData(filterData(geoData, input.value));
+                      }
+                    }
+                  })
                 })
               }) // end .then(() => 
           })
@@ -368,12 +283,103 @@ window.opalSdk
         }
       } // end if (event.type === 'click')
 
-      const close_button = document.getElementById('click-properties-close')
-
-      close_button.addEventListener('click', function () {
-        mapInstance.layer('points_clicked').hide()
-      })
-
     }) // end mapInstance.event$.subscribe((event)
   })
   .catch(e => console.error('Oups', e.message))
+
+function filterData(data, filter) {
+  var filteredData = {
+    "type": "FeatureCollection",
+    "name": "sql_statement",
+    "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+  }
+  var f = []
+  var j = 0;
+
+  for (var i = 0; i < data.features.length; i++) {
+    if (filter == null) {
+      f[i] = data.features[i]
+    } else if (data.features[i].properties.icon == filter) {
+      f[j] = data.features[i]
+      j++
+    }
+  }
+  filteredData.features = f
+  return filteredData
+}
+
+function createLayers(mapApi, data) {
+  mapApi.addData(data, {
+    id: 'clusters-points',
+    type: 'circle',
+    filter: ['has', 'point_count'],
+    paint: {
+      'circle-color': 'rgb(0, 123, 255)',
+      'circle-radius': [
+        'step',
+        ['get', 'point_count'],
+        20,
+        5,
+        //
+        22.5,
+        10,
+        //
+        25,
+        25,
+        //
+        30,
+        50,
+        //
+        35,
+        75,
+        //
+        40,
+        100,
+        //
+        45,
+        150,
+        //
+        50,
+        200,
+        //
+        55,
+        250,
+        //
+        65,
+        400,
+        //
+        70
+      ],
+      'circle-stroke-width': 1,
+      'circle-stroke-color': '#fff',
+    }
+  })
+
+  mapApi.addData(data, {
+    id: 'clusters-points-count',
+    type: 'symbol',
+    filter: ['has', 'point_count'],
+    layout: {
+      'text-field': '{point_count_abbreviated}',
+      'text-font': ['Roboto Bold'],
+      'text-size': 14,
+      'text-offset': [0, 0.15],
+    },
+    paint: {
+      'text-color': '#ffffff',
+    },
+  })
+
+  mapApi.addData(data, {
+    id: 'points',
+    type: 'symbol',
+    filter: ["all",
+      ['!', ['has', 'point_count']],
+    ],
+    layout: {
+      'icon-allow-overlap': true,
+      'icon-image': ['get', 'icon'],
+      'icon-size': 0.6,
+    },
+  })
+}

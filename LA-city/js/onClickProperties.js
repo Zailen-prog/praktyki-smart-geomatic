@@ -1,5 +1,5 @@
-const content = document.getElementById('click-properties-list')
-const container = document.getElementById('click-properties-container')
+const on_click_content = document.getElementById('click-properties-list')
+const on_click_container = document.getElementById('click-properties-container')
 
 function onClickProperties(data) {
     var html_string = '<ul>'
@@ -7,13 +7,7 @@ function onClickProperties(data) {
         html_string += '<li>' + property + ' : ' + data[property] + '</li>'
     }
     html_string += '</ul>'
-    content.innerHTML = html_string
+    on_click_content.innerHTML = html_string
     html_string = null;
-    container.style.left = "0px"
+    on_click_container.style.left = "0px"
 }
-
-const close_button = document.getElementById('click-properties-close')
-
-close_button.addEventListener('click', function () {
-    container.style.left = "-480px"
-})
