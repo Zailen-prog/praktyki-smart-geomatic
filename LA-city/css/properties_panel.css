@@ -4,21 +4,69 @@
     width: 100%;
     bottom: -40%;
     left: 0;
-    background: white;
+    background: rgba(var(--White),1);
     z-index: 16;
     transition: 0.3s ease-out;
 }
 
-#properties-panel-open{
+#properties-panel-button{
     position: absolute;
     z-index: 16;
-    right: 10px;
-    top: -60px;
+    right: 30px;
+    top: -80px;
     width: 50px;
     height: 50px;
-    background-color: rgb(0, 123, 255);
+    background-color: rgba(var(--Dark-Green),1);
     border-radius: 25px;
     cursor: pointer;
+    transition: 0.3s ease-in;
+}
+
+.properties-panel-button-content{
+    position: absolute;
+    background-color: rgba(var(--White),1);
+    width: 60%;
+    height: 5px;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    box-shadow: 
+        0 5px 0 rgba(var(--Dark-Green),1),
+        0 -5px 0 rgba(var(--Dark-Green),1),
+        0 10px 0 rgba(var(--White),1),
+        0 -10px 0 rgba(var(--White),1);
+    transition: .1s ease-in;
+}
+
+.open {
+    background-color: rgba(var(--Dark-Green),1);
+    height: 60%;
+    transform: 
+        translate(50%, -50%)
+        rotate(45deg);
+    box-shadow: 0 0 0; 
+}
+.open::after{
+    content:'';
+    display:block;
+    position: absolute;
+    background-color: rgba(var(--White),1);
+    width: 100%;
+    height: 5px;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+}
+.open::before{
+    content:'';
+    display:block;
+    position: absolute;
+    background-color: rgba(var(--White),1);
+    width: 5px;
+    height: 100%;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
 }
 
 .properties-panel-menu{
@@ -68,6 +116,6 @@
     border-radius: 16px;
     border-style: solid;
     border-width: 4px;
-    border-color: rgb(0, 123, 255);
-    background-color: white;
+    border-color: rgba(var(--Dark-Green),1);
+    background-color: rgba(var(--White),1);
 }

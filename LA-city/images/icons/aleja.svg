@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="100"
+   height="100"
+   data-name="Layer 1"
+   version="1.1"
+   id="svg9"
+   sodipodi:docname="aleja.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs13" />
+  <sodipodi:namedview
+     id="namedview11"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="5.8831284"
+     inkscape:cx="44.534129"
+     inkscape:cy="51.078266"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg9" />
+  <title
+     id="title2">roadway-street-avenue-way-route</title>
+  <circle
+     style="fill:#ff7f2a;fill-rule:evenodd"
+     id="path37"
+     cx="50"
+     cy="50"
+     r="50" />
+  <g
+     id="g7"
+     transform="matrix(0.62504681,0,0,0.85392575,18.747656,4.7540486)"
+     style="fill:#ffffff">
+    <title
+       id="title4">Layer 1</title>
+    <path
+       stroke="null"
+       id="svg_1"
+       d="m 85.19736,49.0901 c 3.6512,-0.28327 6.39952,-1.93864 6.39952,-10.22947 0,-9.46485 -3.58148,-23.99249 -7.9994,-23.99249 -4.41792,0 -7.9994,14.52764 -7.9994,23.99249 0,8.29083 2.74832,9.94621 6.39952,10.22947 v 8.62177 H 62.79904 V 49.0901 c 3.6512,-0.28327 6.39952,-1.93864 6.39952,-10.22947 0,-9.46485 -3.58148,-23.99249 -7.9994,-23.99249 -4.41792,0 -7.9994,14.52764 -7.9994,23.99249 0,8.29083 2.74832,9.94621 6.39952,10.22947 v 8.62177 H 40.40072 V 49.0901 c 3.6512,-0.28327 6.39952,-1.93864 6.39952,-10.22947 0,-9.46485 -3.58148,-23.99249 -7.9994,-23.99249 -4.41792,0 -7.9994,14.52764 -7.9994,23.99249 0,8.29083 2.74832,9.94621 6.39952,10.22947 v 8.62177 H 18.0024 V 49.0901 c 3.6512,-0.28327 6.39952,-1.93864 6.39952,-10.22947 0,-9.46485 -3.58148,-23.99249 -7.9994,-23.99249 -4.41792,0 -7.9994,14.52764 -7.9994,23.99249 0,8.29083 2.74832,9.94621 6.39952,10.22947 v 8.62177 H 2.0036 V 85.13186 H 97.99641 V 57.71187 H 85.19737 V 49.0901 Z M 16.40251,73.13561 H 6.80323 v -3.4275 h 9.59928 z m 19.19856,0 h -9.59928 v -3.4275 h 9.59928 z m 19.19856,0 h -9.59928 v -3.4275 h 9.59928 z m 19.19856,0 h -9.59928 v -3.4275 h 9.59928 z m 19.19856,-3.4275 v 3.4275 h -9.59928 v -3.4275 z"
+       style="fill:#ffffff" />
+  </g>
+</svg>

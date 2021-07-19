@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Mapa obiektów turystycznych Los Angeles</title>
+  <title>Mapa Pomników Przyrody</title>
 
   <script type="text/javascript" src="https://support.smartgeomatic.eu/static/sdk/v0.0.5/opal-sdk.umd.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.css" />
@@ -16,87 +16,105 @@
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/onClickProperties.css">
   <link rel="stylesheet" href="css/properties_panel.css">
+  <link rel="stylesheet" href="css/right_buttons.css">
 </head>
 
 <body>
-  <div class='Legend_container'>
-    <div class='Legend_header'>Mapa obiektów turystycznych <br> Los Angeles</div>
-    <div class='Legend_list'>
-      <ul>
-        <li>
-          <img src="images/icons/icon1.png" alt="Mieszkanie">
-          <div>Mieszkanie</div>
-        </li>
-        <li>
-          <img src="images/icons/icon9.png" alt="Nocleg">
-          <div>Nocleg</div>
-        </li>
-        <li>
-          <img src="images/icons/icon3.png" alt="Dzieła sztuki">
-          <div>Dzieło sztuki</div>
-        </li>
-        <li>
-          <img src="images/icons/icon4.png" alt="Atrakcja">
-          <div>Atrakcja</div>
-        </li>
-        <li>
-          <img src="images/icons/icon5.png" alt="Miejsce Kempingowe">
-          <div>Miejsce Kempingowe</div>
-        </li>
-        <li>
-          <img src="images/icons/icon11.png" alt="Museum">
-          <div>Museum</div>
-        </li>
-        <li>
-          <img src="images/icons/icon13.png" alt="Miesjce widokowe">
-          <div>Miesjce widokowe</div>
-        </li>
-        <li>
-          <img src="images/icons/icon6.png" alt="Galeria">
-          <div>Galeria</div>
-        </li>
-        <li>
-          <img src="images/icons/icon8.png" alt="Informacje dla turystów">
-          <div>Informacje dla turystów</div>
-        </li>
-        <li>
-          <img src="images/icons/icon10.png" alt="Miejsce na piknik">
-          <div>Miejsce na piknik</div>
-        </li>
-        <li>
-          <img src="images/icons/icon12.png" alt="
-          Miejsce dla przyczep kempingowych">
-          <div>Miejsce dla przyczep kempingowych</div>
-        </li>
-        <li>
-          <img src="images/icons/icon14.png" alt="Zoo">
-          <div>Zoo</div>
-        </li>
-        <li>
-          <img src="images/icons/icon2.png" alt="Akwarium">
-          <div>Akwarium</div>
-        </li>
-        <li>
-          <img src="images/icons/icon7.png" alt="Historyczne">
-          <div>Historyczne</div>
-        </li>
-        <li>
-          <img src="images/icons/icon15.png" alt="Inne">
-          <div>Inne</div>
-        </li>
-      </ul>
+  <div class="right-button-container">
+    <button class='Right-buttons' id="Default-position">
+      <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+        <path class="svg-icons"
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+      </svg>
+    </button>
+
+    <button class='Right-buttons' id="zoom-in">
+      <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+        <path class="svg-icons" d="M11 5 h2 v6 h6 v2 h-6 v6 h-2 v-6 h-6 v-2 h6 z" />
+
+      </svg>
+    </button>
+
+    <button class='Right-buttons' id="zoom-out">
+      <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+        <path class="svg-icons" d="M5 11 h14 v2 h-14 z" />
+      </svg>
+    </button>
+  </div>
+  <div id="Legend-wrapper">
+    <button id="Legend-button">
+      <svg viewBox="0 0 100 100">
+        <g class="svg-icons">
+          <path
+            d="m 49.4,15 c -5.737797,-0.185966 -10.642383,5.5474 -9.586868,11.187109 0.702281,5.679028 7.07907,9.653094 12.487259,7.7719 5.475218,-1.539484 8.490046,-8.385328 5.833334,-13.439444 C 56.562025,17.230527 53.061941,14.965939 49.4,15 Z" />
+          <path
+            d="m 64.3,72.2 c -1.534084,-0.05152 -3.089956,0.106812 -4.609375,-0.08594 C 58.64697,71.296235 59.269533,69.767976 59.1,68.603719 c 0,-9.00124 0,-18.002479 0,-27.003719 -0.29132,-1.553156 -2.169953,-0.835701 -3.290837,-1 -6.703054,0 -13.406109,0 -20.109163,0 -1.553156,0.29132 -0.835701,2.169953 -1,3.290837 0.04569,1.823343 -0.09289,3.664551 0.07187,5.476351 0.779353,1.092621 2.353958,0.492336 3.523766,0.690493 1.082139,0.07036 3.01248,-0.321975 2.904359,1.347764 0,6.564852 0,13.129703 0,19.694555 -0.29132,1.553156 -2.169953,0.835701 -3.290837,1 C 36.825605,72.14753 34.857486,71.704658 35,73.405445 35,76.936963 35,80.468482 35,84 c 0.29132,1.553156 2.169953,0.835701 3.290837,1 8.636387,0 17.272775,0 25.909163,0 1.553156,-0.29132 0.835701,-2.169953 1,-3.290837 -0.01809,-2.972547 0.03661,-5.947591 -0.02813,-8.918538 C 65.052373,72.426495 64.671601,72.198353 64.3,72.2 Z" />
+        </g>
+      </svg>
+    </button>
+    <div id="Legend-container">
+      <div class='Legend-content'>
+        <div class='Legend_header'>Mapa Pomników Przyrody</div>
+        <div class='Legend_list'>
+          <ul>
+            <li>
+              <img src="images/icons/drzewo.svg" alt="Drzewo">
+              <div>Drzewo</div>
+            </li>
+            <li>
+              <img src="images/icons/głaz narzutowy.svg" alt="głaz narzutowy">
+              <div>Głaz narzutowy</div>
+            </li>
+            <li>
+              <img src="images/icons/krzew.svg" alt="krzew">
+              <div>Krzew</div>
+            </li>
+            <li>
+              <img src="images/icons/skałka.svg" alt="skałka">
+              <div>Skałka</div>
+            </li>
+            <li>
+              <img src="images/icons/jaskinia.svg" alt="jaskinia">
+              <div>Jaskinia</div>
+            </li>
+            <li>
+              <img src="images/icons/grupa drzew.svg" alt="grupa drzew">
+              <div>Grupa drzew</div>
+            </li>
+            <li>
+              <img src="images/icons/jar.svg" alt="jar">
+              <div>Jar</div>
+            </li>
+            <li>
+              <img src="images/icons/aleja.svg" alt="aleja">
+              <div>Aleja</div>
+            </li>
+            <li>
+              <img src="images/icons/wodospad.svg" alt="wodospad">
+              <div>Wodospad</div>
+            </li>
+            <li>
+              <img src="images/icons/źródło.svg" alt="źródło">
+              <div>Źródło</div>
+            </li>
+            <li>
+              <img src="images/icons/inne.svg" alt="inne">
+              <div>Inne</div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
   <div id="click-properties-container">
-    <div id="click-properties-close">
-      <div></div>
-      <div></div>
-    </div>
+    <div id="click-properties-close"></div>
     <div id="click-properties-header">Informacje o objekcie</div>
     <div id="click-properties-list"></div>
   </div>
   <div id="properties-panel-container">
-    <div id="properties-panel-open"></div>
+    <div id="properties-panel-button">
+      <div class="properties-panel-button-content"></div>
+    </div>
     <fieldset class="properties-panel-menu">
       <div>
         <label class="properties-panel-menu-label">
@@ -104,64 +122,44 @@
           <input class="properties-panel-menu-input" name="position" type="radio" value="all" checked>
         </label>
         <label class="properties-panel-menu-label">
-          <img src="images/icons/icon1.png">
+          <img src="images/icons/drzewo.svg">
           <input class="properties-panel-menu-input" name="position" type="radio" value="icon1">
         </label>
         <label class="properties-panel-menu-label">
-          <img src="images/icons/icon9.png">
+          <img src="images/icons/głaz narzutowy.svg">
           <input class="properties-panel-menu-input" name="position" type="radio" value="icon9">
         </label>
         <label class="properties-panel-menu-label">
-          <img src="images/icons/icon3.png">
+          <img src="images/icons/krzew.svg">
           <input class="properties-panel-menu-input" name="position" type="radio" value="icon3">
         </label>
         <label class="properties-panel-menu-label">
-          <img src="images/icons/icon4.png">
+          <img src="images/icons/skałka.svg">
           <input class="properties-panel-menu-input" name="position" type="radio" value="icon4">
         </label>
         <label class="properties-panel-menu-label">
-          <img src="images/icons/icon5.png">
+          <img src="images/icons/jaskinia.svg">
           <input class="properties-panel-menu-input" name="position" type="radio" value="icon5">
         </label>
         <label class="properties-panel-menu-label">
-          <img src="images/icons/icon11.png">
+          <img src="images/icons/grupa drzew.svg">
           <input class="properties-panel-menu-input" name="position" type="radio" value="icon11">
         </label>
         <label class="properties-panel-menu-label">
-          <img src="images/icons/icon13.png">
+          <img src="images/icons/jar.svg">
           <input class="properties-panel-menu-input" name="position" type="radio" value="icon13">
         </label>
         <label class="properties-panel-menu-label">
-          <img src="images/icons/icon6.png">
+          <img src="images/icons/aleja.svg">
           <input class="properties-panel-menu-input" name="position" type="radio" value="icon6">
         </label>
         <label class="properties-panel-menu-label">
-          <img src="images/icons/icon8.png">
+          <img src="images/icons/wodospad.svg">
           <input class="properties-panel-menu-input" name="position" type="radio" value="icon8">
         </label>
         <label class="properties-panel-menu-label">
-          <img src="images/icons/icon10.png">
+          <img src="images/icons/źródło.svg">
           <input class="properties-panel-menu-input" name="position" type="radio" value="icon10">
-        </label>
-        <label class="properties-panel-menu-label">
-          <img src="images/icons/icon12.png">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon12">
-        </label>
-        <label class="properties-panel-menu-label">
-          <img src="images/icons/icon14.png">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon14">
-        </label>
-        <label class="properties-panel-menu-label">
-          <img src="images/icons/icon2.png">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon2">
-        </label>
-        <label class="properties-panel-menu-label">
-          <img src="images/icons/icon7.png">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon7">
-        </label>
-        <label class="properties-panel-menu-label">
-          <img src="images/icons/icon15.png">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon15">
         </label>
       </div>
     </fieldset>
@@ -169,7 +167,9 @@
   <div id='map' />
   <script src="js/onClickProperties.js"></script>
   <script src="js/properties-panel.js"></script>
-  <script src="js/map-script.js"></script>
+  <script src="js/legend.js"></script>
+  <script src="js/map-script2.js"></script>
+  <script src="js/FileSaver.js"></script>
 </body>
 
 </html>

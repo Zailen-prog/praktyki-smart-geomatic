@@ -1,0 +1,20 @@
+.right-button-container{
+    position: absolute;
+    width: 30px;
+    right: 10px;
+    top: 10px;
+    z-index: 11;
+}
+
+.Right-buttons{
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    height: 30px;
+    border-radius: 100%;
+    margin-bottom: 5px;
+}
+.Right-buttons svg{
+    width: 24px;
+    margin: 3px;
+}

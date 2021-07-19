@@ -7,8 +7,7 @@ const darkId = 'E1KFkOvIyh'
 // map configuration
 const options = {
   container: 'map',
-  maxBounds: [-120, 33.25, -116.2, 34.8],
-  zoom: 1
+  zoom: 1,
 };
 
 let mapApi
@@ -42,10 +41,36 @@ window.opalSdk
       if (event.type === 'load') {
 
         const close_button = document.getElementById('click-properties-close')
+        const default_position = document.getElementById('Default-position')
+        const zoom_in = document.getElementById('zoom-in')
+        const zoom_out = document.getElementById('zoom-out')
+        const map_center = mapInstance.center
+        const def_zoom = mapInstance.zoom
 
-        close_button.addEventListener('click', function () {
+        close_button.addEventListener('click', () => {
           on_click_container.style.left = "-480px"
           mapInstance.layer('points_clicked').hide()
+        })
+
+        default_position.addEventListener('click', () => {
+          mapInstance.flyTo({
+            center: map_center,
+            zoom: def_zoom,
+          })
+        })
+
+        zoom_in.addEventListener('click', () => {
+          const zoom = mapInstance.zoom + 1 > 22 ? 22 : mapInstance.zoom + 1
+          mapInstance.flyTo({
+            zoom: zoom,
+          })
+        })
+
+        zoom_out.addEventListener('click', () => {
+          const zoom = mapInstance.zoom - 1 < def_zoom ? def_zoom : mapInstance.zoom - 1
+          mapInstance.flyTo({
+            zoom: zoom,
+          })
         })
 
         const icons = [
@@ -202,7 +227,7 @@ window.opalSdk
                 })
 
                 document.querySelectorAll('.properties-panel-menu-input').forEach((input) => {
-                  input.addEventListener('change', function () {
+                  input.addEventListener('change', () => {
                     if (input.checked) {
                       if (input.value === 'all') {
                         filterData(geoData, null)
@@ -216,12 +241,6 @@ window.opalSdk
                 })
               }) // end .then(() => 
           })
-
-        mapInstance.controls().add('NavigationControl', {
-          showZoom: true,
-          showCompass: true,
-          visualizePitch: true
-        }, 'top-right')
 
         mapInstance.layer('boundary_2').hide()
         mapInstance.layer('boundary_3').hide()
@@ -314,7 +333,7 @@ function createLayers(mapApi, data) {
     type: 'circle',
     filter: ['has', 'point_count'],
     paint: {
-      'circle-color': 'rgb(0, 123, 255)',
+      'circle-color': '#ff5b5b',
       'circle-radius': [
         'step',
         ['get', 'point_count'],
