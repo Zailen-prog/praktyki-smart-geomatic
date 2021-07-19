@@ -3,7 +3,7 @@ const on_click_container = document.getElementById('click-properties-container')
 
 function onClickProperties(data) {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", data.link, true);
+    xhr.open("GET", "https://cors-anywhere.herokuapp.com/" + data.link, true);
 
     xhr.responseType = "document";
 
