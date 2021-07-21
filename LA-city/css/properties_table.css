@@ -1,0 +1,80 @@
+#properties-table-container {
+  position: absolute;
+  height: 50%;
+  width: 100%;
+  bottom: -50%;
+  left: 0;
+  background: var(--bg-color);
+  z-index: 16;
+  transition: 0.3s ease-out;
+  box-shadow: 0 0 4px var(--box-shadow-color);
+}
+
+#properties-table-hide-button {
+  position: absolute;
+  z-index: 16;
+  right: 30px;
+  top: -80px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-content: center;
+  justify-items: center;
+}
+
+#properties-table-hide-button svg {
+  width: 25px;
+  margin: auto;
+}
+
+.properties-table-menu {
+  width: 100%;
+  border: 0;
+  margin: 0;
+  display: inline-flex;
+  padding: 0;
+  position: relative;
+  min-width: 0;
+  flex-direction: column;
+  vertical-align: top;
+}
+
+.properties-table-menu>div {
+  margin-left: auto;
+  padding-top: 15px;
+  margin-right: auto;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.properties-table-menu label {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 16px;
+  margin-left: 16px;
+  vertical-align: middle;
+  flex-direction: column;
+  padding-bottom: 16px;
+}
+
+.properties-table-menu img {
+  width: 32px;
+}
+
+.properties-table-menu input {
+  cursor: inherit;
+  margin: 5px auto;
+}
+
+#properties-table-menu-all {
+  height: 24px;
+  width: 24px;
+  border-radius: 16px;
+  border-style: solid;
+  border-width: 4px;
+  border-color: var(--map-cluster-color);
+  background: var(--bg-color);
+}

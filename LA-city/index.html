@@ -4,47 +4,59 @@
 
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   <title>Mapa Pomników Przyrody</title>
 
   <script type="text/javascript" src="https://support.smartgeomatic.eu/static/sdk/v0.0.5/opal-sdk.umd.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;display=swap">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/map.css">
   <link rel="stylesheet" href="css/legend.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/onClickProperties.css">
-  <link rel="stylesheet" href="css/properties_panel.css">
+  <link rel="stylesheet" href="css/properties_table.css">
   <link rel="stylesheet" href="css/right_buttons.css">
+  <script src="js/onClickProperties.js" defer></script>
+  <script src="js/properties-table.js" defer></script>
+  <script src="js/legend.js" defer></script>
+  <script src="js/map-scripts.js" defer></script>
+  <script src="js/FileSaver.js" defer></script>
 </head>
 
 <body>
   <div class="right-button-container">
-    <button class='Right-buttons' id="Default-position">
-      <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-        <path class="svg-icons"
+    <button class='Right-buttons' id="Default-position" aria-label="Powrót do pozycji początkowej">
+      <svg class="svg-icons" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+        <path
           d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
       </svg>
     </button>
 
-    <button class='Right-buttons' id="zoom-in">
-      <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-        <path class="svg-icons" d="M11 5 h2 v6 h6 v2 h-6 v6 h-2 v-6 h-6 v-2 h6 z" />
-
+    <button class='Right-buttons' id="zoom-in" aria-label="Przybliż mapę">
+      <svg class="svg-icons" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M10 4 h4 v6 h6 v4 h-6 v6 h-4 v-6 h-6 v-4 h6 z" />
       </svg>
     </button>
 
-    <button class='Right-buttons' id="zoom-out">
-      <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true">
-        <path class="svg-icons" d="M5 11 h14 v2 h-14 z" />
+    <button class='Right-buttons' id="zoom-out" aria-label="Oddal mapę">
+      <svg class="svg-icons" focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 10 h14 v4 h-14 z" />
+      </svg>
+    </button>
+
+    <button class='Right-buttons' id="theme-toggle" aria-label="Zmiań na tryb ciemny">
+      <svg class="svg-icons" viewBox="0 0 26.458 26.458">
+        <g stroke-miterlimit="10" stroke-opacity="0">
+          <circle id="theme-toggle-circle" cx="13.229" cy="13.229" r="4.6964" />
+          <path id="theme-toggle-sun"
+            d="m13.229 0-3.8747 3.8747h-5.4798v5.4798l-3.8747 3.8747 3.8747 3.8747v5.4798h5.4798l3.8747 3.8747 3.8747-3.8747h5.4798v-5.4798l3.8747-3.8747-3.8747-3.8747v-5.4798h-5.4798zm0 6.4704a6.7586 6.7586 0 0 1 6.7588 6.7588 6.7586 6.7586 0 0 1-6.7588 6.7588 6.7586 6.7586 0 0 1-6.7588-6.7588 6.7586 6.7586 0 0 1 6.7588-6.7588z" />
+        </g>
       </svg>
     </button>
   </div>
-  <div id="Legend-wrapper">
-    <button id="Legend-button">
-      <svg viewBox="0 0 100 100">
-        <g class="svg-icons">
+  <div class="Legend-wrapper">
+    <button id="Legend-button" aria-label="Pokaż legendę">
+      <svg class="svg-icons" viewBox="0 0 100 100">
+        <g>
           <path
             d="m 49.4,15 c -5.737797,-0.185966 -10.642383,5.5474 -9.586868,11.187109 0.702281,5.679028 7.07907,9.653094 12.487259,7.7719 5.475218,-1.539484 8.490046,-8.385328 5.833334,-13.439444 C 56.562025,17.230527 53.061941,14.965939 49.4,15 Z" />
           <path
@@ -107,69 +119,82 @@
     </div>
   </div>
   <div id="click-properties-container">
-    <div id="click-properties-close"></div>
-    <div id="click-properties-header">Informacje o objekcie</div>
+    <button id="click-properties-close">
+      <svg class="svg-icons" viewBox="0 0 14.967 14.967">
+        <g>
+          <rect transform="rotate(-45)" x="-9.3401" y="9.3401" width="18.521" height="2.6458" />
+          <rect transform="rotate(45)" x="1.4026" y="-1.2432" width="18.521" height="2.6458" />
+        </g>
+      </svg>
+    </button>
+    <div class="click-properties-header">Informacje o objekcie</div>
     <div id="click-properties-list"></div>
   </div>
-  <div id="properties-panel-container">
-    <div id="properties-panel-button">
-      <div class="properties-panel-button-content"></div>
-    </div>
-    <fieldset class="properties-panel-menu">
+
+  <div id="properties-table-container">
+    <button id="properties-table-hide-button" aria-label="Otwórz tabelę">
+      <svg class="svg-icons" viewBox="0 0 18.521 13.229">
+        <g stroke-miterlimit="10" stroke-opacity="0">
+          <rect y="-.00013222" width="18.521" height="2.6458" />
+          <rect y="5.2913" width="18.521" height="2.6458" />
+          <rect y="10.583" width="18.521" height="2.6458" />
+        </g>
+      </svg>
+    </button>
+    <fieldset class="properties-table-menu">
       <div>
-        <label class="properties-panel-menu-label">
-          <div id="properties-panel-menu-all"></div>
-          <input class="properties-panel-menu-input" name="position" type="radio" value="all" checked>
+        <label>
+          <div id="properties-table-menu-all"></div>
+          <input type="checkbox" checked>
         </label>
-        <label class="properties-panel-menu-label">
+        <label>
           <img src="images/icons/drzewo.svg">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon1">
+          <input type="checkbox" value="drzewo" checked>
         </label>
-        <label class="properties-panel-menu-label">
+        <label>
           <img src="images/icons/głaz narzutowy.svg">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon9">
+          <input type="checkbox" value="głaz narzutowy" checked>
         </label>
-        <label class="properties-panel-menu-label">
+        <label>
           <img src="images/icons/krzew.svg">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon3">
+          <input type="checkbox" value="krzew" checked>
         </label>
-        <label class="properties-panel-menu-label">
+        <label>
           <img src="images/icons/skałka.svg">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon4">
+          <input type="checkbox" value="skałka" checked>
         </label>
-        <label class="properties-panel-menu-label">
+        <label>
           <img src="images/icons/jaskinia.svg">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon5">
+          <input type="checkbox" value="jaskinia" checked>
         </label>
-        <label class="properties-panel-menu-label">
+        <label>
           <img src="images/icons/grupa drzew.svg">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon11">
+          <input type="checkbox" value="grupa drzew" checked>
         </label>
-        <label class="properties-panel-menu-label">
+        <label>
           <img src="images/icons/jar.svg">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon13">
+          <input type="checkbox" value="jar" checked>
         </label>
-        <label class="properties-panel-menu-label">
+        <label>
           <img src="images/icons/aleja.svg">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon6">
+          <input type="checkbox" value="aleja" checked>
         </label>
-        <label class="properties-panel-menu-label">
+        <label>
           <img src="images/icons/wodospad.svg">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon8">
+          <input type="checkbox" value="wodospad" checked>
         </label>
-        <label class="properties-panel-menu-label">
+        <label>
           <img src="images/icons/źródło.svg">
-          <input class="properties-panel-menu-input" name="position" type="radio" value="icon10">
+          <input type="checkbox" value="źródło" checked>
+        </label>
+        <label>
+          <img src="images/icons/inne.svg">
+          <input type="checkbox" value="inne" checked>
         </label>
       </div>
     </fieldset>
   </div>
   <div id='map' />
-  <script src="js/onClickProperties.js"></script>
-  <script src="js/properties-panel.js"></script>
-  <script src="js/legend.js"></script>
-  <script src="js/map-script2.js"></script>
-  <script src="js/FileSaver.js"></script>
 </body>
 
 </html>

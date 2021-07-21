@@ -1,28 +1,66 @@
-:root{
-    --Blackish: 32, 32, 32;
-    --Dark-Grey: 63, 63, 63;
-    --Medium-Grey: 112, 112, 112;
-    --Light-Grey: 240, 230, 240;
-    --White: 255, 255, 255;
-    --Dark-Green: 40, 100, 40;
+.light_theme {
+  --fg-color: hsla(0, 0%, 0%, 1);
+  --fg-color-header: hsla(0, 0%, 0%, 0.9);
+  --fg-color-text: hsla(0, 0%, 0%, 0.8);
+  --fg-color-button: hsla(0, 0%, 0%, 0.6);
+  --fg-color-border: hsla(0, 0%, 0%, 0.3);
+  --bg-color: hsla(0, 0%, 100%, 1);
+  --bg-color-scroll-thumb: hsla(0, 0%, 0%, 0.2);
+  --bg-color-button-hover: hsla(0, 0%, 50%, 0.15);
+  --box-shadow-color: hsla(0, 0%, 0%, 0.3);
+  --map-cluster-color: rgb(40, 100, 40);
+  --map-border-outline: hsla(0, 0%, 0%, 0.5)
 }
 
-button{
-    border: none;
-    padding: 0;
-    margin: 0;
-    background-color: rgba(var(--White),1);
+.dark_theme {
+  --fg-color: hsla(0, 0%, 100%, 1);
+  --fg-color-header: hsla(0, 0%, 100%, 0.9);
+  --fg-color-text: hsla(0, 0%, 100%, 0.8);
+  --fg-color-button: hsla(0, 0%, 100%, 0.6);
+  --fg-color-border: hsla(0, 0%, 100%, 0.3);
+  --bg-color: hsla(0, 0%, 15%, 1);
+  --bg-color-scroll-thumb: hsla(0, 0%, 0%, 0.2);
+  --bg-color-button-hover: hsla(0, 0%, 50%, 0.15);
+  --box-shadow-color: hsla(0, 0%, 0%, 0.3);
+  --map-cluster-color: rgb(40, 100, 40);
+  --map-border-outline: hsla(0, 0%, 100%, 0.4)
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    font-family: "Lato",sans-serif;
-    font-size: 14px;
-    display: block;
-    overflow-y: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: "Lato", sans-serif;
+  font-size: 14px;
+  display: block;
+  overflow-y: hidden;
 }
 
-.svg-icons{
-    fill: rgba(var(--Dark-Green),1);
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+button {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: var(--bg-color);
+  box-shadow: 0 1px 4px var(--box-shadow-color);
+  border-radius: 8px;
+}
+
+button:hover {
+  background: linear-gradient(var(--bg-color-button-hover), var(--bg-color-button-hover)), linear-gradient(var(--bg-color), var(--bg-color));
+}
+
+.svg-icons {
+  transition: 0.3s ease-out;
+  fill: var(--fg-color);
+  opacity: 0.6;
+}
+
+button:hover .svg-icons {
+  opacity: 1;
 }

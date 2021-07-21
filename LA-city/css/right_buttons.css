@@ -1,20 +1,38 @@
-.right-button-container{
-    position: absolute;
-    width: 30px;
-    right: 10px;
-    top: 10px;
-    z-index: 11;
+.right-button-container {
+  position: absolute;
+  width: 30px;
+  right: 10px;
+  top: 10px;
+  z-index: 11;
 }
 
-.Right-buttons{
-    cursor: pointer;
-    position: relative;
-    width: 100%;
-    height: 30px;
-    border-radius: 100%;
-    margin-bottom: 5px;
+.Right-buttons {
+  cursor: pointer;
+  position: relative;
+  width: 100%;
+  height: 30px;
+  margin-bottom: 5px;
+  padding: 3px;
 }
-.Right-buttons svg{
-    width: 24px;
-    margin: 3px;
+
+#theme-toggle svg {
+  transition: 0.3s ease-out;
+}
+
+.light_theme #theme-toggle-sun {
+  transform: rotate(0.5turn);
+}
+
+.light_theme #theme-toggle-circle {
+  transform: scale(1.2) translateX(-15%);
+}
+
+#theme-toggle-circle,
+#theme-toggle-sun {
+  transform-origin: center;
+  transition: transform 0.5s ease-out;
+}
+
+#theme-toggle-sun {
+  transition: transform 0.75s cubic-bezier(0.46, 1.15, 0.41, 1.2);
 }

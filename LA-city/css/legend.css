@@ -1,4 +1,4 @@
-#Legend-wrapper{
+.Legend-wrapper{
     position: absolute;
     top: 40px;
     left: 20px;
@@ -10,8 +10,10 @@
 #Legend-container{
     height: 100%;
     width: 200px;
-    box-shadow: 0 2px 2px 0 rgba(var(--Medium-Grey),1);
-    background-color: rgba(var(--White),0.7);
+    border-radius: 8px;
+    padding-bottom: 5px;
+    box-shadow: 0 0 4px var(--box-shadow-color);
+    background: var(--bg-color);
     transform: scale(0);
     transform-origin: top left;
     transition: 0.2s ease-in;
@@ -25,7 +27,7 @@
 }
 
 .Legend_header {
-    color: rgba(var(--Blackish),1);
+    color: var(--fg-color-header);
     font-size: 18px;
     font-weight: 700;
     text-align: center;
@@ -54,7 +56,7 @@
 }
 
 .Legend_list li {
-    color: rgba(var(--Dark-Grey),1);
+    color: var(--fg-color-text);
     margin: 10px 0 ;
     width: 90%;
     display: flex;
@@ -72,12 +74,12 @@
 }
 
 .Legend_list:hover::-webkit-scrollbar-thumb{
-	background-color: rgba(var(--Medium-Grey),1);
+	background: var(--bg-color-scroll-thumb);
 }
 
 .Legend_list::-webkit-scrollbar-thumb{
 	border-radius: 8px;
-	background-color: transparent;
+	background: transparent;
 }
 
 #Legend-button{
@@ -88,7 +90,6 @@
     left: -10px;
     height: 40px;
     width: 40px;
-    border-radius: 50%;
 }
 
 #Legend-button svg{
