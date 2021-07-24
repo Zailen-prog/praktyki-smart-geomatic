@@ -153,7 +153,6 @@
 
 .table-content {
   width: 100%;
-  text-align: left;
   border-collapse: collapse;
 }
 
@@ -169,8 +168,6 @@
 .table-content td,
 .table-content th {
   padding: 16px;
-  padding-right: 24px;
-  max-width: 50px;
   text-align: center;
 }
 
@@ -180,7 +177,9 @@
 }
 
 .table-content th {
+  padding-right: 24px;
   position: relative;
+  text-transform: uppercase;
 }
 
 .table-content th div {
@@ -271,4 +270,44 @@
 .table-pagination-curr::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+@media screen and (max-width: 1000px) {
+  .table-content {
+    border: 0;
+  }
+  .table-content thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  .table-content tr {
+    border-bottom: 3px solid var(--fg-color-border);
+    display: block;
+  }
+  .table-content td {
+    min-height: 1em;
+    border-bottom: 1px solid var(--fg-color-border);
+    display: block;
+    font-size: 16px;
+    text-align: right;
+  }
+  .table-content td::before {
+    /*
+    * aria-label has no advantage, it won't be read inside a table
+    content: attr(aria-label);
+    */
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .table-content td:last-child {
+    border-bottom: 0;
+  }
 }

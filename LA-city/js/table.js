@@ -198,7 +198,7 @@ function buildTableData() {
         var property = row.properties[element];
       }
 
-      HTML_data += `<td>${property}</td>`;
+      HTML_data += `<td data-label= ${element}>${property}</td>`;
     }
 
     HTML_data += `</tr>`;
