@@ -10,16 +10,15 @@
   <link rel="stylesheet" type="text/css" href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;display=swap">
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/legend.css">
   <link rel="stylesheet" href="css/app.css">
-  <link rel="stylesheet" href="css/onClickProperties.css">
-  <link rel="stylesheet" href="css/properties_table.css">
   <link rel="stylesheet" href="css/right_buttons.css">
-  <script src="js/onClickProperties.js" defer></script>
-  <script src="js/properties-table.js" defer></script>
-  <script src="js/legend.js" defer></script>
+  <link rel="stylesheet" href="css/legend.css">
+  <link rel="stylesheet" href="css/table.css">
+  <link rel="stylesheet" href="css/onClickProperties.css">
   <script src="js/map-scripts.js" defer></script>
-  <script src="js/FileSaver.js" defer></script>
+  <script src="js/legend.js" defer></script>
+  <script src="js/table.js" defer></script>
+  <!-- <script src="js/FileSaver.js" defer></script> -->
 </head>
 
 <body>
@@ -43,7 +42,7 @@
       </svg>
     </button>
 
-    <button class='Right-buttons' id="theme-toggle" aria-label="Zmiań na tryb ciemny">
+    <button class='Right-buttons' id="theme-toggle" aria-label="">
       <svg class="svg-icons" viewBox="0 0 26.458 26.458">
         <g stroke-miterlimit="10" stroke-opacity="0">
           <circle id="theme-toggle-circle" cx="13.229" cy="13.229" r="4.6964" />
@@ -66,7 +65,7 @@
     </button>
     <div id="Legend-container">
       <div class='Legend-content'>
-        <div class='Legend_header'>Mapa Pomników Przyrody</div>
+        <header class='Legend_header'>Mapa Pomników Przyrody</header>
         <div class='Legend_list'>
           <ul>
             <li>
@@ -127,12 +126,12 @@
         </g>
       </svg>
     </button>
-    <div class="click-properties-header">Informacje o objekcie</div>
+    <header class="click-properties-header">Informacje o objekcie</header>
     <div id="click-properties-list"></div>
   </div>
 
-  <div id="properties-table-container">
-    <button id="properties-table-hide-button" aria-label="Otwórz tabelę">
+  <div id="table-wrapper">
+    <button id="table-show-button" aria-label="Otwórz tabelę">
       <svg class="svg-icons" viewBox="0 0 18.521 13.229">
         <g stroke-miterlimit="10" stroke-opacity="0">
           <rect y="-.00013222" width="18.521" height="2.6458" />
@@ -141,58 +140,107 @@
         </g>
       </svg>
     </button>
-    <fieldset class="properties-table-menu">
+    <fieldset class="table-fieldset">
       <div>
         <label>
-          <div id="properties-table-menu-all"></div>
+          <div id="table-fieldset-all"></div>
           <input type="checkbox" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/drzewo.svg">
           <input type="checkbox" value="drzewo" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/głaz narzutowy.svg">
           <input type="checkbox" value="głaz narzutowy" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/krzew.svg">
           <input type="checkbox" value="krzew" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/skałka.svg">
           <input type="checkbox" value="skałka" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/jaskinia.svg">
           <input type="checkbox" value="jaskinia" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/grupa drzew.svg">
           <input type="checkbox" value="grupa drzew" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/jar.svg">
           <input type="checkbox" value="jar" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/aleja.svg">
           <input type="checkbox" value="aleja" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/wodospad.svg">
           <input type="checkbox" value="wodospad" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/źródło.svg">
           <input type="checkbox" value="źródło" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
         <label>
           <img src="images/icons/inne.svg">
           <input type="checkbox" value="inne" checked>
+          <div class="table-fieldset-custom-input"></div>
         </label>
       </div>
     </fieldset>
+    <div class="table-content-wrapper">
+      <table class="table-content">
+        <thead class="table-content-header" />
+        <tbody class="table-content-data" />
+      </table>
+    </div>
+    <div class="table-pagination-wrapper">
+      <div class="table-pagination-rows">
+        <span>Wierszy na stronie</span>
+        <select class="table-pagination-rows-select">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+      </div>
+      <div class="table-pagination-pages">
+        <div class="table-pagination-counter"></div>
+        <button class="table-pagination-prev">
+          <svg class="svg-icons" viewBox="0 0 26.458 26.458">
+              <g transform="rotate(225 14.972 11.07)">
+                <rect x="3.9267" y="4.0605" width="15" height="2"/>
+                <rect x="16.927" y="4.0605" width="2" height="15"/>
+              </g>
+            </svg>
+        </button>
+        <input class="table-pagination-curr" type="number"></input>
+        <button class="table-pagination-next">
+          <svg class="svg-icons"viewBox="0 0 26.458 26.458">
+              <g transform="rotate(45 8.0156 9.0226)">
+                <rect x="3.9267" y="4.0605" width="15" height="2"/>
+                <rect x="16.927" y="4.0605" width="2" height="15"/>
+              </g>
+            </svg>
+        </button>
+      </div>
+    </div>
   </div>
   <div id='map' />
 </body>

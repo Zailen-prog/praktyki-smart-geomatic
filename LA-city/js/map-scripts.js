@@ -26,7 +26,6 @@
  *  3.3 starting position button
  *  3.4 zoom in button
  *  3.5 zoom out button
- *  3.6 properties-table-menu filter checkboxes
  * 4.
  * 5. Functions decleration
  *  5.1 onCreate
@@ -34,7 +33,6 @@
  *  5.3 enDarkMode
  *  5.4 enLightMode
  *  5.5 onMapActions
- *  5.6 filterData
  */
 
 /**
@@ -51,11 +49,16 @@ const brightId = 'NxpJokfIoI';
 //  1.2.2 map id with dark theme
 const darkId = 'E1KFkOvIyh';
 // 1.3 map configuration (map options)
-var map_options = {
-  container: 'map',
+const starting_position = {
   center: [19, 52],
   zoom: 6,
-  maxZoom: 17,
+  bearing: 0,
+  pitch: 0
+}
+var map_options = {
+  container: 'map',
+  ...starting_position,
+  maxZoom: 22,
   minZoom: 1,
 };
 
@@ -93,22 +96,36 @@ const icons = [
  */
 // 2.1 PomnikiIconsPromise
 // upon resolve returns object with created bitmap data and id for each icon
+
+function fetchIMG(url) {
+  return new Promise((resolve) => {
+    fetch(url)
+      .then(response => response.arrayBuffer())
+      .then(data => {
+        const blob = new window.Blob([new Uint8Array(data)], {
+          type: 'image/png',
+        });
+        resolve(window.createImageBitmap(blob));
+      });
+  });
+}
+
+function fetchJSON(url) {
+  return new Promise((resolve) => {
+    fetch(url)
+      .then(response => resolve(response.json()))
+  });
+}
+
 const PomnikiIconsPromise = new Promise((resolve) => {
   Promise.all(
     icons.map(img => new Promise((resolve) => {
-      fetch(img.url)
-        .then(response => response.arrayBuffer())
-        .then(data => {
-          const blob = new window.Blob([new Uint8Array(data)], {
-            type: 'image/png',
-          });
-          return window.createImageBitmap(blob);
-        })
+      fetchIMG(img.url)
         .then(image => {
-          var image_info = {};
-          image_info.data = image;
-          image_info.id = img.id;
-          return image_info
+          return {
+            'data': image,
+            'id': img.id
+          }
         })
         .then(resolve)
     }))
@@ -118,8 +135,7 @@ const PomnikiIconsPromise = new Promise((resolve) => {
 // 2.2 PomnikiDataPromise
 // upon resolve returns dataset with points for each Pomnik
 const PomnikiDataPromise =
-  fetch('data/PomnikiPrzyrody/data.json')
-  .then(response => response.json())
+  fetchJSON('data/PomnikiPrzyrody/data.json')
   .then(data => {
     geoData = data;
     return window.opalSdk.createDataset('pomniki', {
@@ -133,8 +149,7 @@ const PomnikiDataPromise =
 // 2.3 WojewodztwaPromise
 // upon resolve returns dataset with polygons for each wojewodztwo
 const WojewodztwaPromise =
-  fetch('data/wojewodztwa/wojewodztwa.geojson')
-  .then(response => response.json())
+  fetchJSON('data/wojewodztwa/wojewodztwa.geojson')
   .then(data => {
     return window.opalSdk.createDataset('wojewodztwa', {
       data: data,
@@ -154,11 +169,10 @@ document.getElementById('theme-toggle')
       container: 'map',
       center: mapApi.center,
       zoom: mapApi.zoom,
-      maxZoom: 17,
-      minZoom: 1,
+      maxZoom: mapApi.maxZoom,
+      minZoom: mapApi.minZoom,
     };
     window.opalSdk.destroyMap(mapApi)
-
     body_element.classList.contains('light_theme') ?
       enDarkMode() :
       enLightMode();
@@ -167,19 +181,14 @@ document.getElementById('theme-toggle')
 // 3.2 close properties window button
 document.getElementById('click-properties-close')
   .addEventListener('click', () => {
-    on_click_container.style.left = "-480px";
+    document.getElementById('click-properties-container').style.left = "-480px";
     mapApi.layer('points_clicked').hide();
   });
 
 // 3.3 starting position button
 document.getElementById('Default-position')
   .addEventListener('click', () => {
-    const map_center = mapApi.center;
-    const def_zoom = mapApi.zoom;
-    mapApi.flyTo({
-      center: map_center,
-      zoom: def_zoom,
-    })
+    mapApi.flyTo(starting_position)
   });
 // 3.4 zoom in button
 document.getElementById('zoom-in')
@@ -198,60 +207,7 @@ document.getElementById('zoom-out')
     })
   });
 
-// 3.6 properties-table-menu filter checkboxes
-PomnikiDataPromise
-  .then(dataset => {
-    const filter_array = [
-      'drzewo',
-      'głaz narzutowy',
-      'krzew',
-      'skałka',
-      'jaskinia',
-      'grupa drzew',
-      'jar',
-      'aleja',
-      'wodospad',
-      'źródło',
-      'inne'
-    ];
 
-    var new_filter_array = filter_array;
-    const filter_all = document.querySelectorAll('.properties-table-menu input')[0];
-    const filter_seperate = document.querySelectorAll(".properties-table-menu input[value]");
-
-    filter_all.addEventListener('click', () => {
-      if (filter_all.checked) {
-        new_filter_array = filter_array;
-        dataset.setData(geoData);
-        filter_seperate.forEach(input => {
-          input.checked = true;
-        });
-      } else {
-        new_filter_array = [];
-        dataset.setData(filterData(geoData, 'obiekt', new_filter_array));
-        filter_seperate.forEach(input => {
-          input.checked = false;
-        });
-      }
-    });
-
-    filter_seperate.forEach(input => {
-      input.addEventListener('click', () => {
-
-        if (document.querySelectorAll('.properties-table-menu input:checked').length == 11) {
-          filter_all.checked = true;
-        }
-
-        if (input.checked) {
-          new_filter_array.push(input.value);
-        } else {
-          new_filter_array = new_filter_array.filter(item => item !== input.value);
-          filter_all.checked = false;
-        }
-        dataset.setData(filterData(geoData, 'obiekt', new_filter_array));
-      });
-    });
-  });
 
 /**
  * *************************
@@ -294,6 +250,7 @@ const body_element = document.body;
 function enDarkMode() {
   body_element.classList.add('dark_theme');
   body_element.classList.remove('light_theme');
+  document.getElementById('theme-toggle').setAttribute('aria-label', 'Zmień na tryb jasny')
   createMap(darkId);
 }
 
@@ -302,6 +259,7 @@ function enDarkMode() {
 function enLightMode() {
   body_element.classList.add('light_theme');
   body_element.classList.remove('dark_theme');
+  document.getElementById('theme-toggle').setAttribute('aria-label', 'Zmień na tryb ciemny')
   createMap(brightId);
 }
 
@@ -364,7 +322,7 @@ function onMapActions() {
               })
               .setLngLat(popup_coords)
               .setHTML(
-                `<div style="font-size: 14px; font-weight: bold;">${popupValue
+                `<div">${popupValue
                 }</div>`
               )) :
             (popupValue = null);
@@ -389,7 +347,7 @@ function onMapActions() {
       const target = mapApi.query(coords, { layers });
       if (target.length >= 1) {
 
-        mapApi.layer('points_clicked').setFilter(['==', ['get', 'id'], target[0].properties.id]);
+        mapApi.layer('points_clicked').setFilter(['==', ['get', 'gid'], target[0].properties.gid]);
         mapApi.layer('points_clicked').show();
 
         const objectProperties = {
@@ -402,21 +360,6 @@ function onMapActions() {
   })
 }
 
-// 5.6 filterData
-// filters data based on property and its value
-function filterData(data, property, filter) {
-  var filteredData = {
-    "type": "FeatureCollection",
-    "features": []
-  };
-
-  for (let i = 0; i < data.features.length; i++) {
-    if (filter.includes(data.features[i].properties[property])) {
-      filteredData.features.push(data.features[i]);
-    }
-  }
-  return filteredData;
-}
 
 // 5.7 createLayers
 // creates layers for points
@@ -424,9 +367,7 @@ function createLayers(mapApi, data, layer_id) {
   mapApi.addData(data, {
     id: `${layer_id}_clusters`,
     type: 'circle',
-    filter: ['all', ['has', 'point_count'],
-      // ['==', ['get', 'obiekt'], 'drzewo'],
-    ],
+    filter: ['all', ['has', 'point_count'], ],
     paint: {
       'circle-color': getComputedStyle(document.body).getPropertyValue('--map-cluster-color'),
       'circle-radius': [
@@ -495,9 +436,7 @@ function createLayers(mapApi, data, layer_id) {
   mapApi.addData(data, {
     id: `${layer_id}_cluster-count`,
     type: 'symbol',
-    filter: ['all', ['has', 'point_count'],
-      // ['==', ['get', 'obiekt'], 'drzewo']
-    ],
+    filter: ['all', ['has', 'point_count'], ],
     layout: {
       'text-field': '{point_count_abbreviated}',
       'text-font': ['Roboto Bold'],
@@ -512,17 +451,38 @@ function createLayers(mapApi, data, layer_id) {
   mapApi.addData(data, {
     id: layer_id,
     type: 'symbol',
-    filter: ['all', ['!', ['has', 'point_count']],
-      // ['==', ['get', 'obiekt'], 'źródło'],
-    ],
+    filter: ['all', ['!', ['has', 'point_count']], ],
     layout: {
       'icon-allow-overlap': true,
       'icon-image': ['get', 'obiekt'],
       'icon-size': 0.24,
     },
   });
-
 }
+
+function onClickProperties(data) {
+  const on_click_content = document.getElementById('click-properties-list');
+  const on_click_container = document.getElementById('click-properties-container');
+  var html_string = '<ul>';
+  for (const property in data) {
+    switch (property) {
+      case 'link':
+        html_string += `<li>${property} : <a target="_blank" rel="noopener noreferrer" href = ${data[property]} ><b>Więcej informacji</b><a></li>`;
+        break;
+      case 'data utworzenia':
+        html_string += `<li>${property} : <b>${new Date(data[property]).toLocaleDateString()}</b></li>`;
+        break;
+      default:
+        html_string += `<li>${property} : <b>${data[property]}</b></li>`;
+    }
+  }
+  html_string += '</ul>';
+  on_click_content.innerHTML = html_string;
+  html_string = null;
+  on_click_container.style.left = "0px";
+}
+
+
 
 // var blob = new Blob([JSON.stringify(data, null, " ")], { type: "text/plain;charset=utf-8" });
 // saveAs(blob, "d.json");

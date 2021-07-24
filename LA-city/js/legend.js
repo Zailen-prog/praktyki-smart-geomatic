@@ -1,13 +1,13 @@
 const legend_button = document.getElementById('Legend-button');
-const legend_container = document.getElementById('Legend-container');
+const legend_wrapper = document.querySelector('.Legend-wrapper');
 
 
-legend_button.addEventListener('click', function () {
-  var matrix = new WebKitCSSMatrix(getComputedStyle(legend_container).transform)
-  if (matrix.m11 === 0) {
-    legend_container.style.transform = "scale(1)"
-  }
-  else {
-    legend_container.style.transform = "scale(0)"
+legend_button.addEventListener('click', function() {
+  if (legend_wrapper.style.height === "625px") {
+    legend_wrapper.style.height = "0px";
+    legend_button.setAttribute('aria-label', 'Pokaż legendę');
+  } else {
+    legend_wrapper.style.height = "625px";
+    legend_button.setAttribute('aria-label', 'Schowaj legendę');
   }
 });

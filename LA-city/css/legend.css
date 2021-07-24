@@ -1,99 +1,138 @@
-.Legend-wrapper{
-    position: absolute;
-    top: 40px;
-    left: 20px;
-    z-index: 10;
-    height: 625px;
-    max-height: 80%;
+.Legend-wrapper {
+  position: absolute;
+  top: 40px;
+  left: 20px;
+  z-index: 14;
+  height: 0px;
+  width: 200px;
+  max-height: 80%;
+  transform-origin: top left;
+  transition: 0.2s ease-in;
 }
 
-#Legend-container{
-    height: 100%;
-    width: 200px;
-    border-radius: 8px;
-    padding-bottom: 5px;
-    box-shadow: 0 0 4px var(--box-shadow-color);
-    background: var(--bg-color);
-    transform: scale(0);
-    transform-origin: top left;
-    transition: 0.2s ease-in;
+#Legend-container {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 0 8px var(--box-shadow-color);
+  background: var(--bg-color);
 }
 
 .Legend-content {
-    font-size: 14px;
-    height: 100%;
-    display:flex;
-    flex-direction:column;
+  font-size: 14px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .Legend_header {
-    color: var(--fg-color-header);
-    font-size: 18px;
-    font-weight: 700;
-    text-align: center;
-    letter-spacing: 1px;
-    margin: 10px 0;
-}
-.Legend_list{
-    max-height: 100%;
-    overflow-y: auto;
-}
-.Legend_list ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0;
-    width: 90%;
-    margin: 10px 0 0 0;
-}
-.Legend_list li:first-child{
-    margin: 0 0 10px 0;
+  color: var(--fg-color-header);
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 1px;
+  margin: 10px 0;
 }
 
-.Legend_list li:last-child{
-    margin: 10px 0 0 0;
+.Legend_list {
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.Legend_list ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  width: 90%;
+  margin: 10px 0 0 0;
+}
+
+.Legend_list li:first-child {
+  margin: 0 0 10px 0;
+}
+
+.Legend_list li:last-child {
+  margin: 10px 0 0 0;
 }
 
 .Legend_list li {
-    color: var(--fg-color-text);
-    margin: 10px 0 ;
-    width: 90%;
-    display: flex;
-    align-items: center;
+  color: var(--fg-color-text);
+  margin: 10px 0;
+  width: 90%;
+  display: flex;
+  align-items: center;
 }
 
 .Legend_list img {
-    width: 29px;
-    margin-right: 10px;
+  width: 29px;
+  margin-right: 10px;
 }
 
-.Legend_list::-webkit-scrollbar{
-	width: 8px;
-	background:transparent;
+.Legend_list::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
 }
 
-.Legend_list:hover::-webkit-scrollbar-thumb{
-	background: var(--bg-color-scroll-thumb);
+.Legend_list:hover::-webkit-scrollbar-thumb {
+  background: var(--bg-color-scroll-thumb);
 }
 
-.Legend_list::-webkit-scrollbar-thumb{
-	border-radius: 8px;
-	background: transparent;
+.Legend_list::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: transparent;
 }
 
-#Legend-button{
-    cursor: pointer;
-    position: absolute;
-    z-index: 11;
-    top:-30px;
-    left: -10px;
-    height: 40px;
-    width: 40px;
+#Legend-button {
+  cursor: pointer;
+  position: absolute;
+  z-index: 11;
+  top: -30px;
+  left: -10px;
+  height: 40px;
+  width: 40px;
 }
 
-#Legend-button svg{
-    width:34px;
-    margin: 3px;
+#Legend-button::after,
+#Legend-button::before {
+  --scale: 0;
+  --arrow-size: 8px;
+  position: absolute;
+  content: "";
+  top: 50%;
+  right: -3px;
+  transform: translateY(-50%) translateX(var(--translate-x, 0)) scale(var(--scale));
+  transition: 150ms transform;
 }
 
+#Legend-button::before {
+  --translate-x: calc(100% + var(--arrow-size));
+  content: attr(aria-label);
+  color: var(--fg-color-button);
+  background-color: var(--bg-color);
+  width: 10px;
+  width: max-content;
+  padding: 7px;
+  border-radius: 3px;
+  transform-origin: left center;
+  box-shadow: 0 1px 1px var(--box-shadow-color);
+}
+
+#Legend-button::after {
+  transform-origin: right center;
+  --translate-x: calc(var(--arrow-size) + 1px);
+  border: var(--arrow-size) solid transparent;
+  border-right-color: var(--bg-color);
+}
+
+#Legend-button:hover::after,
+#Legend-button:hover::before {
+  --scale: 1;
+}
+
+#Legend-button svg {
+  width: 34px;
+  margin: 3px;
+}
