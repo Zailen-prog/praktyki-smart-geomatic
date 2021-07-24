@@ -1,6 +1,3 @@
-const properties_container = document.getElementById('table-wrapper');
-const properties_hide_button = document.getElementById('table-show-button');
-
 var table_state = {
   'data': [],
   'page': 1,
@@ -19,20 +16,48 @@ const columns_filter = [
   'powierzchnia',
 ];
 
+const properties_container = document.getElementById('table-wrapper');
+const properties_hide_button = document.getElementById('table-show-button');
+const table_open = document.querySelector("#table-open");
+const table_close = document.querySelector("#table-close");
+
 // close/open table button
 properties_hide_button.addEventListener('click', function() {
   if (getComputedStyle(properties_container).bottom === "0px") {
     properties_container.style.bottom = "-50%";
     properties_hide_button.setAttribute('aria-label', 'Otwórz tabelę');
+    properties_hide_button.style.top = "-80px";
+    properties_hide_button.style.right = "30px";
+    properties_hide_button.style.boxShadow = '0 1px 4px var(--box-shadow-color)';
+    properties_hide_button.style.borderRadius = '20%';
+    table_open.style.display = "block";
+    table_close.style.display = "none";
     document.getElementById('click-properties-container').style.height = "100%";
   } else {
     properties_container.style.bottom = "0px";
     properties_hide_button.setAttribute('aria-label', 'Zamknij tabelę');
+    properties_hide_button.style.top = "10px";
+    properties_hide_button.style.right = "10px";
+    properties_hide_button.style.boxShadow = "none";
+    properties_hide_button.style.borderRadius = '0px';
     document.getElementById('click-properties-container').style.height = "50%";
+    table_open.style.display = "none";
+    table_close.style.display = "block";
   }
 })
 
+const filter_open = document.querySelector('.table-filter-open');
+const filter_options = document.querySelector('.table-filter-options');
+filter_open.addEventListener('click', () => {
+  filter_options.style.display = 'block';
+  filter_options.style.transform = 'scale(1)';
+})
 
+const filter_close = document.querySelector('.table-filter-close');
+filter_close.addEventListener('click', () => {
+  filter_options.style.display = 'none';
+  filter_options.style.transform = 'scale(0)';
+})
 const pagination_prev = document.querySelector('.table-pagination-prev');
 pagination_prev.disabled = true;
 pagination_prev.addEventListener('click', () => {
@@ -213,7 +238,7 @@ function buildTableData() {
       });
     });
   });
-
+  buildSelect();
   const pagination_counter = document.querySelector('.table-pagination-counter');
   if (table_state.page > 0) {
     pagination_counter.innerHTML =
@@ -261,6 +286,37 @@ function buildTableHeader() {
       buildTableData();
     })
   })
+}
+
+function buildSelect() {
+  const selects = document.querySelectorAll('.table-filter-selects-wrapper > div')
+  selects.forEach(select => {
+    var optionHTML = "<div>";
+    var options = findUniqueValues(select.getAttribute('aria-label'));
+    for (let i = 0; i < options.length; i++) {
+      optionHTML += `<label>${options[i]}<input type=\"radio\" name=${select.getAttribute('aria-label')}></label>`
+    }
+    optionHTML += "</div>";
+    // console.log(optionHTML)
+    select.innerHTML = optionHTML;
+
+  })
+}
+
+function findUniqueValues(property) {
+  var lookup = {};
+  var items = table_state.data;
+  var result = [];
+
+  for (var item, i = 0; item = items[i++];) {
+
+    var name = item.properties[property];
+    if (!(name in lookup)) {
+      lookup[name] = 1;
+      result.push(name);
+    }
+  }
+  return result;
 }
 
 function sortData(data, property, order = 'desc') {

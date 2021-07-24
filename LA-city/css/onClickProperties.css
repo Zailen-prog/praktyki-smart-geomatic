@@ -58,6 +58,44 @@
   border-radius: 0;
 }
 
+#click-properties-close::after,
+#click-properties-close::before {
+  pointer-events: none;
+  --scale: 0;
+  --arrow-size: 8px;
+  position: absolute;
+  content: "";
+  top: 50%;
+  right: -3px;
+  transform: translateY(-50%) translateX(var(--translate-x, 0)) scale(var(--scale));
+  transition: 150ms transform;
+}
+
+#click-properties-close::before {
+  --translate-x: calc(100% + var(--arrow-size));
+  content: attr(aria-label);
+  color: var(--fg-color-button);
+  background-color: var(--bg-color);
+  width: 10px;
+  width: max-content;
+  padding: 7px;
+  border-radius: 3px;
+  transform-origin: left center;
+  box-shadow: 0 1px 1px var(--box-shadow-color);
+}
+
+#click-properties-close::after {
+  transform-origin: right center;
+  --translate-x: calc(var(--arrow-size) + 1px);
+  border: var(--arrow-size) solid transparent;
+  border-right-color: var(--bg-color);
+}
+
+#click-properties-close:hover::after,
+#click-properties-close:hover::before {
+  --scale: 1;
+}
+
 #click-properties-list::-webkit-scrollbar {
   width: 8px;
   background: transparent;

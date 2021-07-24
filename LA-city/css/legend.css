@@ -97,6 +97,7 @@
 
 #Legend-button::after,
 #Legend-button::before {
+  pointer-events: none;
   --scale: 0;
   --arrow-size: 8px;
   position: absolute;
