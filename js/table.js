@@ -3,9 +3,10 @@ var table_state = {
   'page': 1,
   'rows': 10,
 }
+
 var max_pages;
 
-const columns_filter = [
+const columns = [
   'obiekt',
   'gatunek',
   'nazwa',
@@ -16,48 +17,104 @@ const columns_filter = [
   'powierzchnia',
 ];
 
-const properties_container = document.getElementById('table-wrapper');
-const properties_hide_button = document.getElementById('table-show-button');
+var filters = {
+  'obiekt': 'Wszystko',
+  'gatunek': 'Wszystko',
+  'nazwa': 'Wszystko',
+  'typ': 'Wszystko',
+  'podtyp': 'Wszystko',
+  'data utworzenia': 'Wszystko',
+  'województwo': 'Wszystko',
+  'powierzchnia': 'Wszystko',
+}
+
+const table_wrapper = document.getElementById('table-wrapper');
+const table_open_button = document.getElementById('table-show-button');
 const table_open = document.querySelector("#table-open");
 const table_close = document.querySelector("#table-close");
 
 // close/open table button
-properties_hide_button.addEventListener('click', function() {
-  if (getComputedStyle(properties_container).bottom === "0px") {
-    properties_container.style.bottom = "-50%";
-    properties_hide_button.setAttribute('aria-label', 'Otwórz tabelę');
-    properties_hide_button.style.top = "-80px";
-    properties_hide_button.style.right = "30px";
-    properties_hide_button.style.boxShadow = '0 1px 4px var(--box-shadow-color)';
-    properties_hide_button.style.borderRadius = '20%';
+table_open_button.addEventListener('click', function() {
+  if (getComputedStyle(table_wrapper).bottom === "0px") {
+    table_wrapper.style.bottom = "-50%";
+    table_open_button.setAttribute('aria-label', 'Otwórz tabelę');
+    table_open_button.style.top = "-80px";
+    table_open_button.style.right = "30px";
+    table_open_button.style.boxShadow = '0 1px 4px var(--box-shadow-color)';
+    table_open_button.style.borderRadius = '20%';
     table_open.style.display = "block";
     table_close.style.display = "none";
     document.getElementById('click-properties-container').style.height = "100%";
   } else {
-    properties_container.style.bottom = "0px";
-    properties_hide_button.setAttribute('aria-label', 'Zamknij tabelę');
-    properties_hide_button.style.top = "10px";
-    properties_hide_button.style.right = "10px";
-    properties_hide_button.style.boxShadow = "none";
-    properties_hide_button.style.borderRadius = '0px';
+    table_wrapper.style.bottom = "0px";
+    table_open_button.setAttribute('aria-label', 'Zamknij tabelę');
+    table_open_button.style.top = "10px";
+    table_open_button.style.right = "10px";
+    table_open_button.style.boxShadow = "none";
+    table_open_button.style.borderRadius = '0px';
     document.getElementById('click-properties-container').style.height = "50%";
     table_open.style.display = "none";
     table_close.style.display = "block";
   }
 })
 
-const filter_open = document.querySelector('.table-filter-open');
-const filter_options = document.querySelector('.table-filter-options');
-filter_open.addEventListener('click', () => {
-  filter_options.style.display = 'block';
-  filter_options.style.transform = 'scale(1)';
+const filter_mask = document.querySelector('.filter-mask');
+
+filter_mask.addEventListener('click', (event) => {
+  if (event.target.classList.contains('filter-mask')) {
+    filter_wrapper.style.display = 'none';
+    filter_wrapper.style.transform = 'scale(0)';
+    filter_mask.style.display = 'none';
+  }
 })
 
-const filter_close = document.querySelector('.table-filter-close');
-filter_close.addEventListener('click', () => {
-  filter_options.style.display = 'none';
-  filter_options.style.transform = 'scale(0)';
+const filter_open = document.querySelector('.table-filter-open');
+const filter_wrapper = document.querySelector('.filter-wrapper');
+filter_open.addEventListener('click', () => {
+  filter_wrapper.style.display = 'block';
+  filter_wrapper.style.transform = 'scale(1)';
+  filter_mask.style.display = 'block';
 })
+
+const filter_close = document.querySelector('.filter-close-button');
+filter_close.addEventListener('click', () => {
+  filter_wrapper.style.display = 'none';
+  filter_wrapper.style.transform = 'scale(0)';
+  filter_mask.style.display = 'none';
+})
+
+const filter_selects = document.querySelectorAll('.filter-selects-wrapper div');
+filter_selects.forEach(select => {
+  select.addEventListener('click', () => {
+    const select_options = document.querySelector(`.filter-select-options[data-name="${select.getAttribute('aria-label')}"]`);
+    document.querySelector('.filter-options').style.display = 'block';
+    select_options.style.display = "block";
+    var rect = select.getBoundingClientRect();
+    select_options.style.width = `${select.offsetWidth}px`;
+    if (select_options.offsetHeight > window.innerHeight - rect.bottom) {
+      select_options.style.bottom = '20px';
+    } else {
+      select_options.style.top = `${rect.top}px`;
+    }
+
+    if (select_options.offsetWidth > window.innerWidth - rect.left) {
+      select_options.style.right = '20px';
+    } else {
+      select_options.style.left = `${rect.left}px`;
+    }
+  })
+})
+
+const filter_options = document.querySelector('.filter-options');
+filter_options.addEventListener('click', (event) => {
+  if (event.target.classList.contains('filter-options')) {
+    filter_options.style.display = 'none';
+    document.querySelectorAll('.filter-select-options').forEach(select => {
+      select.style.display = 'none';
+    })
+  }
+})
+
 const pagination_prev = document.querySelector('.table-pagination-prev');
 pagination_prev.disabled = true;
 pagination_prev.addEventListener('click', () => {
@@ -103,82 +160,27 @@ pagination_select.addEventListener('change', () => {
 
 // top filter option
 PomnikiDataPromise
-  .then(dataset => {
-    const filter_array = [
-      'drzewo',
-      'głaz narzutowy',
-      'krzew',
-      'skałka',
-      'jaskinia',
-      'grupa drzew',
-      'jar',
-      'aleja',
-      'wodospad',
-      'źródło',
-      'inne'
-    ];
-
-    var new_filter_array = filter_array;
-    var filtered_data = geoData.features;
-    const filter_all = document.querySelectorAll('.table-fieldset input')[0];
-    const filter_seperate = document.querySelectorAll(".table-fieldset input[value]");
-
-    filter_all.addEventListener('click', () => {
-      if (filter_all.checked) {
-        new_filter_array = filter_array;
-        table_state.data = geoData.features;
-        dataset.setData(geoData);
-        filter_seperate.forEach(input => {
-          input.checked = true;
-        });
-      } else {
-        new_filter_array = [];
-        filtered_data = filterData(geoData, 'obiekt', new_filter_array);
-        table_state.data = filtered_data.features;
-        dataset.setData(filtered_data);
-        filter_seperate.forEach(input => {
-          input.checked = false;
-        });
-      }
-      buildTable();
-    });
-
-    filter_seperate.forEach(input => {
-      input.addEventListener('click', () => {
-        if (document.querySelectorAll('.table-fieldset input:checked').length == 11) {
-          filter_all.checked = true;
-        }
-
-        if (input.checked) {
-          new_filter_array.push(input.value);
-        } else {
-          new_filter_array = new_filter_array.filter(item => item !== input.value);
-          filter_all.checked = false;
-        }
-        filtered_data = filterData(geoData, 'obiekt', new_filter_array);
-        table_state.data = filtered_data.features;
-        dataset.setData(filtered_data);
-        buildTable();
-      });
-    });
-
+  .then(() => {
     table_state.data = geoData.features;
-
     buildTable();
-
   });
 
 // filters data based on property and its value
-function filterData(data, property, filter) {
+function filterData(filter) {
   var filteredData = {
     "type": "FeatureCollection",
     "features": []
   };
 
-  for (let i = 0; i < data.features.length; i++) {
-    if (filter.includes(data.features[i].properties[property])) {
-      filteredData.features.push(data.features[i]);
+  for (let i = 0; i < geoData.features.length; i++) {
+    var flag = 1;
+    for (var property in filter) {
+      if (!(geoData.features[i].properties[property] == filter[property] || filter[property] == 'Wszystko')) {
+        flag = 0;
+        break;
+      }
     }
+    if (flag) filteredData.features.push(geoData.features[i]);
   }
   return filteredData;
 }
@@ -215,7 +217,7 @@ function buildTableData() {
   for (let row of table_list) {
     HTML_data += `<tr id=${row.geometry.coordinates}>`;
 
-    for (let element of columns_filter) {
+    for (let element of columns) {
 
       if (element == 'data utworzenia') {
         var property = new Date(row.properties[element]).toLocaleDateString();
@@ -260,7 +262,7 @@ function buildTableHeader() {
   const table_header = document.querySelector(".table-content-header");
 
   var HTML_header = `<tr>`;
-  columns_filter.forEach(column => {
+  columns.forEach(column => {
     HTML_header += `<th>${column}<div /></th>`;
   });
   HTML_header += `</tr>`;
@@ -289,18 +291,36 @@ function buildTableHeader() {
 }
 
 function buildSelect() {
-  const selects = document.querySelectorAll('.table-filter-selects-wrapper > div')
+  const selects = document.querySelectorAll('.filter-selects-wrapper div')
   selects.forEach(select => {
-    var optionHTML = "<div>";
-    var options = findUniqueValues(select.getAttribute('aria-label'));
+    var aria_label = select.getAttribute('aria-label');
+    var options_container = document.querySelector(`.filter-select-options[data-name='${aria_label}']`);
+    var optionHTML = "";
+    optionHTML += `<label>Wszystko
+    <input type=\"radio\" name=${aria_label} value="Wszystko"></label>`;
+    var options = findUniqueValues(aria_label);
     for (let i = 0; i < options.length; i++) {
-      optionHTML += `<label>${options[i]}<input type=\"radio\" name=${select.getAttribute('aria-label')}></label>`
+      optionHTML += `<label>${options[i]}
+      <input type=\"radio\" name=${aria_label} value="${options[i]}"></label>`;
     }
-    optionHTML += "</div>";
     // console.log(optionHTML)
-    select.innerHTML = optionHTML;
+    options_container.innerHTML = optionHTML;
+    options_container.querySelectorAll('input').forEach(option => {
+      option.addEventListener('click', (event) => {
+        event.cancelBubble = true;
+        event.preventDefault();
+        options_container.style.display = "none";
+        filter_options.style.display = 'none';
+        select.querySelector('span').innerHTML = option.value;
 
-  })
+        filters[aria_label] = option.value;
+        var filtered_data = filterData(filters);
+        table_state.data = filtered_data.features;
+        PomnikiDataPromise.then(dataset => dataset.setData(filtered_data));
+        buildTableData();
+      });
+    });
+  });
 }
 
 function findUniqueValues(property) {

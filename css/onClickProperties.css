@@ -5,7 +5,7 @@
   height: 100%;
   width: 100%;
   max-width: 480px;
-  z-index: 15;
+  z-index: 200;
   background: var(--bg-color);
   box-shadow: 0 3px 2px 0 var(--box-shadow-color);
   font-size: 14px;

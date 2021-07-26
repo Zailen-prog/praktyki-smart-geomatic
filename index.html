@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="css/right_buttons.css">
   <link rel="stylesheet" href="css/legend.css">
   <link rel="stylesheet" href="css/table.css">
+  <link rel="stylesheet" href="css/filter.css">
   <link rel="stylesheet" href="css/onClickProperties.css">
   <script src="js/map-scripts.js" defer></script>
   <script src="js/legend.js" defer></script>
@@ -130,7 +131,7 @@
     <header class="click-properties-header">Informacje o objekcie</header>
     <div id="click-properties-list"></div>
   </div>
-
+  <!-- <div class="mask"></div> -->
   <div id="table-wrapper">
     <button id="table-show-button" aria-label="Otwórz tabelę">
       <svg id="table-open" class="svg-icons" viewBox="0 0 18.521 13.229">
@@ -148,7 +149,7 @@
       </svg>
     </button>
     <div class="table-filter-wrapper">
-      <button class="table-filter-open">
+      <button class="table-filter-open" aria-label="Filtr">
         <svg class="svg-icons" viewBox="0 0 402.577 402.577">
           <path d="M400.858,11.427c-3.241-7.421-8.85-11.132-16.854-11.136H18.564c-7.993,0-13.61,3.715-16.846,11.136
 		c-3.234,7.801-1.903,14.467,3.999,19.985l140.757,140.753v138.755c0,4.955,1.809,9.232,5.424,12.854l73.085,73.083
@@ -156,91 +157,6 @@
 		C402.765,25.895,404.093,19.231,400.858,11.427z"/>
         </svg>
       </button>
-      <div class="table-filter-options">
-        <div class="table-filter-options-header">
-          Filtry
-          <button class="table-filter-close">
-            <svg id="table-options-close" class="svg-icons" viewBox="0 0 14.967 14.967">
-              <g>
-                <rect transform="rotate(-45)" x="-9.3401" y="9.3401" width="18.521" height="2.6458" />
-                <rect transform="rotate(45)" x="1.4026" y="-1.2432" width="18.521" height="2.6458" />
-              </g>
-            </svg>
-          </button>
-        </div>
-        <fieldset class="table-fieldset">
-          <div class="table-fieldset-obiekt">
-            <label>
-          <div id="table-fieldset-all"></div>
-          <input type="checkbox" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/drzewo.svg">
-          <input type="checkbox" value="drzewo" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/głaz narzutowy.svg">
-          <input type="checkbox" value="głaz narzutowy" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/krzew.svg">
-          <input type="checkbox" value="krzew" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/skałka.svg">
-          <input type="checkbox" value="skałka" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/jaskinia.svg">
-          <input type="checkbox" value="jaskinia" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/grupa drzew.svg">
-          <input type="checkbox" value="grupa drzew" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/jar.svg">
-          <input type="checkbox" value="jar" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/aleja.svg">
-          <input type="checkbox" value="aleja" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/wodospad.svg">
-          <input type="checkbox" value="wodospad" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/źródło.svg">
-          <input type="checkbox" value="źródło" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-            <label>
-          <img src="images/icons/inne.svg">
-          <input type="checkbox" value="inne" checked>
-          <div class="table-fieldset-custom-input"></div>
-        </label>
-          </div>
-          <div class="table-filter-selects-wrapper">
-            <div id="table-filter-gatunek" aria-label="gatunek">123</div>
-            <div id="table-filter-typ" aria-label="typ"></div>
-            <div id="table-filter-podtyp" aria-label="podtyp"></div>
-            <div id="table-filter-województwo" aria-label="województwo"></div>
-            <div id="table-filter-data" aria-label="data utworzenia"></div>
-            <div id="table-filter-powierzchnia" aria-label="powierzchnia"></div>
-          </div>
-        </fieldset>
-      </div>
     </div>
     <div class="table-content-wrapper">
       <table class="table-content">
@@ -279,6 +195,59 @@
         </button>
       </div>
     </div>
+  </div>
+  <div class="filter-mask">
+    <div class="filter-wrapper">
+      <div class="filter-header">
+        Filtry
+        <button class="filter-close-button">
+        <svg id="filter-close-svg" class="svg-icons" viewBox="0 0 14.967 14.967">
+          <g>
+            <rect transform="rotate(-45)" x="-9.3401" y="9.3401" width="18.521" height="2.6458" />
+            <rect transform="rotate(45)" x="1.4026" y="-1.2432" width="18.521" height="2.6458" />
+          </g>
+        </svg>
+      </button>
+      </div>
+      <fieldset class="filter-fieldset">
+        <div class="filter-selects-wrapper">
+          <div id="table-filter-obiekt" aria-label="obiekt">
+            <span>Wszystko</span>
+          </div>
+          <div id="table-filter-gatunek" aria-label="gatunek">
+            <span>Wszystko</span>
+          </div>
+          <div id="table-filter-nazwa" aria-label="nazwa">
+            <span>Wszystko</span>
+          </div>
+          <div id="table-filter-typ" aria-label="typ">
+            <span>Wszystko</span>
+          </div>
+          <div id="table-filter-podtyp" aria-label="podtyp">
+            <span>Wszystko</span>
+          </div>
+          <div id="table-filter-województwo" aria-label="województwo">
+            <span>Wszystko</span>
+          </div>
+          <div id="table-filter-data" aria-label="data utworzenia">
+            <span>Wszystko</span>
+          </div>
+          <div id="table-filter-powierzchnia" aria-label="powierzchnia">
+            <span>Wszystko</span>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <div class="filter-options">
+    <div class="filter-select-options" data-name="obiekt"></div>
+    <div class="filter-select-options" data-name="gatunek"></div>
+    <div class="filter-select-options" data-name="nazwa"></div>
+    <div class="filter-select-options" data-name="typ"></div>
+    <div class="filter-select-options" data-name="podtyp"></div>
+    <div class="filter-select-options" data-name="województwo"></div>
+    <div class="filter-select-options" data-name="data utworzenia"></div>
+    <div class="filter-select-options" data-name="powierzchnia"></div>
   </div>
   <div id='map' />
 </body>
