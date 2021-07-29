@@ -6,16 +6,16 @@ var table_state = {
 
 var max_pages;
 
-const columns = [
-  'obiekt',
-  'gatunek',
-  'nazwa',
-  'typ',
-  'podtyp',
-  'data utworzenia',
-  'województwo',
-  'powierzchnia',
-];
+var columns = {
+  'obiekt': 1,
+  'gatunek': 1,
+  'nazwa': 1,
+  'typ': 1,
+  'podtyp': 1,
+  'data utworzenia': 1,
+  'województwo': 1,
+  'powierzchnia': 1,
+};
 
 var filters = {
   'obiekt': 'Wszystko',
@@ -62,57 +62,89 @@ const filter_mask = document.querySelector('.filter-mask');
 
 filter_mask.addEventListener('click', (event) => {
   if (event.target.classList.contains('filter-mask')) {
-    filter_wrapper.style.display = 'none';
+    filter_mask.style.pointerEvents = 'none';
     filter_wrapper.style.transform = 'scale(0)';
-    filter_mask.style.display = 'none';
   }
 })
 
 const filter_open = document.querySelector('.table-filter-open');
 const filter_wrapper = document.querySelector('.filter-wrapper');
 filter_open.addEventListener('click', () => {
-  filter_wrapper.style.display = 'block';
+  filter_mask.style.pointerEvents = 'auto';
   filter_wrapper.style.transform = 'scale(1)';
-  filter_mask.style.display = 'block';
 })
 
 const filter_close = document.querySelector('.filter-close-button');
 filter_close.addEventListener('click', () => {
-  filter_wrapper.style.display = 'none';
   filter_wrapper.style.transform = 'scale(0)';
-  filter_mask.style.display = 'none';
+  filter_mask.style.pointerEvents = 'none';
 })
 
 const filter_selects = document.querySelectorAll('.filter-selects-wrapper div');
 filter_selects.forEach(select => {
   select.addEventListener('click', () => {
     const select_options = document.querySelector(`.filter-select-options[data-name="${select.getAttribute('aria-label')}"]`);
-    document.querySelector('.filter-options').style.display = 'block';
-    select_options.style.display = "block";
+    document.querySelector('.filter-options').style.pointerEvents = 'auto';
     var rect = select.getBoundingClientRect();
     select_options.style.width = `${select.offsetWidth}px`;
+
     if (select_options.offsetHeight > window.innerHeight - rect.bottom) {
       select_options.style.bottom = '20px';
+      select_options.style.top = 'initial';
     } else {
       select_options.style.top = `${rect.top}px`;
+      select_options.style.bottom = 'initial';
     }
 
     if (select_options.offsetWidth > window.innerWidth - rect.left) {
       select_options.style.right = '20px';
+      select_options.style.left = `initial`;
     } else {
       select_options.style.left = `${rect.left}px`;
+      select_options.style.right = 'inital';
     }
+    select_options.style.transform = "scale(1)";
   })
 })
 
 const filter_options = document.querySelector('.filter-options');
 filter_options.addEventListener('click', (event) => {
   if (event.target.classList.contains('filter-options')) {
-    filter_options.style.display = 'none';
+    filter_options.style.pointerEvents = 'none';
     document.querySelectorAll('.filter-select-options').forEach(select => {
-      select.style.display = 'none';
+      select.style.transform = 'scale(0)';
     })
   }
+})
+
+const filter_columns_open = document.querySelector('.table-filter-columns');
+const filter_columns_mask = document.querySelector('.filter-columns');
+const filter_columns_wrapper = document.querySelector('.filter-columns-wrapper');
+const filter_columns = document.querySelectorAll('.filter-select-columns');
+
+filter_columns_open.addEventListener('click', () => {
+  filter_columns_mask.style.pointerEvents = 'auto';
+  filter_columns_wrapper.style.transform = 'scale(1)';
+})
+
+filter_columns_mask.addEventListener('click', (event) => {
+  if (event.target.classList.contains('filter-columns')) {
+    filter_columns_mask.style.pointerEvents = 'none';
+    filter_columns_wrapper.style.transform = 'scale(0)';
+  }
+})
+
+filter_columns.forEach(filter_column => {
+  filter_column.querySelector('input').addEventListener('change', (event) => {
+    if (event.target.checked) {
+      filter_column.querySelector('svg').style.display = 'block';
+      columns[filter_column.querySelector('span').innerText.toLowerCase()] = 1;
+    } else {
+      filter_column.querySelector('svg').style.display = 'none';
+      columns[filter_column.querySelector('span').innerText.toLowerCase()] = 0;
+    }
+    buildTable();
+  })
 })
 
 const pagination_prev = document.querySelector('.table-pagination-prev');
@@ -165,7 +197,6 @@ PomnikiDataPromise
     buildTable();
   });
 
-// filters data based on property and its value
 function filterData(filter) {
   var filteredData = {
     "type": "FeatureCollection",
@@ -217,15 +248,16 @@ function buildTableData() {
   for (let row of table_list) {
     HTML_data += `<tr id=${row.geometry.coordinates}>`;
 
-    for (let element of columns) {
+    for (let name in columns) {
+      if (columns[name]) {
+        if (name == 'data utworzenia') {
+          var property = new Date(row.properties[name]).toLocaleDateString();
+        } else {
+          var property = row.properties[name];
+        }
 
-      if (element == 'data utworzenia') {
-        var property = new Date(row.properties[element]).toLocaleDateString();
-      } else {
-        var property = row.properties[element];
+        HTML_data += `<td data-label= ${name}>${property}</td>`;
       }
-
-      HTML_data += `<td data-label= ${element}>${property}</td>`;
     }
 
     HTML_data += `</tr>`;
@@ -262,9 +294,11 @@ function buildTableHeader() {
   const table_header = document.querySelector(".table-content-header");
 
   var HTML_header = `<tr>`;
-  columns.forEach(column => {
-    HTML_header += `<th>${column}<div /></th>`;
-  });
+  for (let name in columns) {
+    if (columns[name]) {
+      HTML_header += `<th>${name}<div /></th>`;
+    }
+  };
   HTML_header += `</tr>`;
   table_header.innerHTML = HTML_header;
 
@@ -309,10 +343,9 @@ function buildSelect() {
       option.addEventListener('click', (event) => {
         event.cancelBubble = true;
         event.preventDefault();
-        options_container.style.display = "none";
-        filter_options.style.display = 'none';
+        options_container.style.transform = "scale(0)";
+        filter_options.style.pointerEvents = 'none';
         select.querySelector('span').innerHTML = option.value;
-
         filters[aria_label] = option.value;
         var filtered_data = filterData(filters);
         table_state.data = filtered_data.features;
@@ -341,7 +374,6 @@ function findUniqueValues(property) {
 
 function sortData(data, property, order = 'desc') {
   if (order == 'asc') {
-    // if(property == 'data utworzenia' || property == 'powierzchnia')
     return data.sort((a, b) => a.properties[property].localeCompare(b.properties[property]));
   }
   return data.sort((a, b) => b.properties[property].localeCompare(a.properties[property]));

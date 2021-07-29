@@ -3,39 +3,6 @@
  */
 
 /**
- * *******************
- * TABLE OF CONTENT
- * *******************
- * 1. Creating all neceserry map variables and objects
- *  1.1 account id
- *  1.2 map ids
- *    1.2.1 map id with light theme
- *    1.2.2 map id with dark theme
- *  1.3 map configuration
- *  1.4 map authenticator
- *  1.5 map instance
- *  1.6 geo data will store Pomniki dataset 
- *  1.7 icons array
- * 2. Creating promises to ensure synchronicity
- *  2.1 PomnikiIconsPromise
- *  2.2 PomnikiDataPromise
- *  2.3 WojewodztwaPromise
- * 3. Creating all event listeners that efects map
- *  3.1 theme toogle buton
- *  3.2 close properties window button
- *  3.3 starting position button
- *  3.4 zoom in button
- *  3.5 zoom out button
- * 4.
- * 5. Functions decleration
- *  5.1 onCreate
- *  5.2 createMap
- *  5.3 enDarkMode
- *  5.4 enLightMode
- *  5.5 onMapActions
- */
-
-/**
  * *************************************************
  * 1. Creating all neceserry map variables and objects
  * *************************************************
@@ -487,21 +454,6 @@ function onClickProperties(data) {
 // var blob = new Blob([JSON.stringify(data, null, " ")], { type: "text/plain;charset=utf-8" });
 // saveAs(blob, "d.json");
 
-// var lookup = {};
-// var items = data;
-// var result = [];
-
-// for (var item, i = 0; item = items.features[i++];) {
-
-//   var name = item.properties.nazwa;
-//   if (name.indexOf('�') > -1) {
-//     if (!(name in lookup)) {
-//       lookup[name] = 1;
-//       result.push(name);
-//     }
-//   }
-// }
-// console.log(result);
 
 function resetHeight() {
   // reset the body height to that of the inner browser
