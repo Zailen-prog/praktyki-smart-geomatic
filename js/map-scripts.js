@@ -132,6 +132,7 @@ const WojewodztwaPromise =
 // 3.1 theme toogle buton
 document.getElementById('theme-toggle')
   .addEventListener("click", () => {
+    document.querySelector('.loading-screen-wrapper').style.display = 'block'
     map_options = {
       container: 'map',
       center: mapApi.center,
@@ -238,38 +239,41 @@ function onMapActions() {
   var popup_coords;
   mapApi.event$.subscribe((event) => {
     if (event.type === 'load') {
-
-      PomnikiIconsPromise
-        .then(images => images.forEach((image) => {
-          mapApi.images().add(image.id, image.data, { 'sdf': true })
-        }))
-        .then(() => {
-          PomnikiDataPromise
-            .then(dataset => {
-              createLayers(mapApi, dataset, 'pomniki');
+      new Promise(resolve => {
+          PomnikiIconsPromise
+            .then(images => images.forEach((image) => {
+              mapApi.images().add(image.id, image.data, { 'sdf': true })
+            }))
+            .then(() => {
+              PomnikiDataPromise
+                .then(dataset => {
+                  createLayers(mapApi, dataset, 'pomniki');
+                });
             });
-        });
 
-      WojewodztwaPromise
-        .then(dataset => {
-          mapApi.addData(dataset, {
-            id: 'wojewodztwa',
-            type: 'line',
-            paint: {
-              'line-color': getComputedStyle(document.body).getPropertyValue('--map-border-outline'),
-              'line-width': 1,
-            },
-          })
-        });
+          WojewodztwaPromise
+            .then(dataset => {
+              mapApi.addData(dataset, {
+                id: 'wojewodztwa',
+                type: 'line',
+                paint: {
+                  'line-color': getComputedStyle(document.body).getPropertyValue('--map-border-outline'),
+                  'line-width': 1,
+                },
+              })
+            });
 
-      mapApi.layer('boundary_2').hide();
-      mapApi.layer('boundary_country').hide();
-      mapApi.layer('boundary_state').hide();
-      mapApi.layer('boundary_3').hide();
-      mapApi.layer('poi_z14').hide();
-      mapApi.layer('poi_z15').hide();
-      mapApi.layer('poi_z16').hide();
-      mapApi.layer('poi_transit').hide();
+          mapApi.layer('boundary_2').hide();
+          mapApi.layer('boundary_country').hide();
+          mapApi.layer('boundary_state').hide();
+          mapApi.layer('boundary_3').hide();
+          mapApi.layer('poi_z14').hide();
+          mapApi.layer('poi_z15').hide();
+          mapApi.layer('poi_z16').hide();
+          mapApi.layer('poi_transit').hide();
+          resolve();
+        })
+        .then(() => document.querySelector('.loading-screen-wrapper').style.display = 'none');
     } // end if (event.type === 'load')
 
     if (event.type === 'mousemove') {
@@ -425,6 +429,7 @@ function createLayers(mapApi, data, layer_id) {
       'icon-size': 0.24,
     },
   });
+
 }
 
 function onClickProperties(data) {

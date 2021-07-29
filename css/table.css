@@ -121,10 +121,37 @@
 
 .table-content th {
   padding-right: 24px;
-  text-transform: uppercase;
   position: sticky;
   top: 0;
   background-color: var(--bg-color-table-header);
+}
+
+.table-content th::before {
+  font-size: 10px;
+  pointer-events: none;
+  --scale: 0;
+  position: absolute;
+  bottom: -3px;
+  right: 50%;
+  transform: translateX(50%) translateY(var(--translate-y, 0)) scale(var(--scale));
+  transition: 150ms transform;
+}
+
+.table-content th::before {
+  --translate-y: 50%;
+  content: attr(data-name);
+  background-color: var(--bg-color);
+  color: var(--fg-color-text);
+  width: 10px;
+  width: max-content;
+  padding: 7px;
+  border-radius: 3px;
+  transform-origin: right center;
+  box-shadow: 0 1px 1px var(--box-shadow-color);
+}
+
+.table-content th:hover::before {
+  --scale: 1;
 }
 
 .table-content th div {

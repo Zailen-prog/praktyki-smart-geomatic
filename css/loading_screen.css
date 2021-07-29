@@ -1,0 +1,33 @@
+.loading-screen-wrapper {
+  display: block;
+}
+
+.loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: var(--bg-color);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-circle {
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
+  border: 20px solid var(--bg-load-circle-color);
+  border-top-color: var(--fg-load-circle-color);
+  background: var(--bg-color);
+  transform-origin: center;
+  animation: load 1.5s infinite linear;
+}
+
+@keyframes load {
+  100% {
+    transform: rotate(360deg);
+  }
+}

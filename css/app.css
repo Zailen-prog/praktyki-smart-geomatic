@@ -12,7 +12,9 @@
   --bg-color-table-header: hsla(0, 0%, 94%, 1);
   --box-shadow-color: hsla(0, 0%, 0%, 0.3);
   --map-cluster-color: rgb(40, 100, 40);
-  --map-border-outline: hsla(0, 0%, 0%, 0.5)
+  --map-border-outline: hsla(0, 0%, 0%, 0.5);
+  --fg-load-circle-color: hsla(0, 0%, 50%, 0.6);
+  --bg-load-circle-color: hsla(0, 0%, 50%, 0.3);
 }
 
 .dark_theme {
@@ -29,7 +31,9 @@
   --bg-color-table-header: hsla(0, 0%, 9%, 1);
   --box-shadow-color: hsla(0, 0%, 0%, 0.3);
   --map-cluster-color: rgb(40, 100, 40);
-  --map-border-outline: hsla(0, 0%, 100%, 0.4)
+  --map-border-outline: hsla(0, 0%, 100%, 0.4);
+  --bg-load-circle-color: hsla(0, 0%, 50%, 0.6);
+  --fg-load-circle-color: hsla(0, 0%, 50%, 0.3);
 }
 
 body {

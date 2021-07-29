@@ -296,7 +296,7 @@ function buildTableHeader() {
   var HTML_header = `<tr>`;
   for (let name in columns) {
     if (columns[name]) {
-      HTML_header += `<th>${name}<div /></th>`;
+      HTML_header += `<th data-name='sortuj po ${name.toUpperCase()}'>${name.toUpperCase()}<div /></th>`;
     }
   };
   HTML_header += `</tr>`;
@@ -309,18 +309,21 @@ function buildTableHeader() {
     const content = column.textContent;
     order[content] = 'asc';
     column.addEventListener('click', () => {
-      const arrow = column.querySelector('div');
-      order[content] = order[content] == 'asc' ? 'desc' : 'asc';
-      document.querySelectorAll(".table-content-header th div")
-        .forEach(el => el.innerHTML = '');
-      if (order[content] == 'asc') {
-        arrow.innerHTML = '&#9650';
-      } else {
-        arrow.innerHTML = '&#9660';
-      }
-      table_state.data = sortData(table_state.data, content, order[content]);
-      buildTableData();
-    })
+        const arrow = column.querySelector('div');
+        order[content] = order[content] == 'asc' ? 'desc' : 'asc';
+        document.querySelectorAll(".table-content-header th div")
+          .forEach(el => el.innerHTML = '');
+        if (order[content] == 'asc') {
+          arrow.innerHTML = '&#9650';
+        } else {
+          arrow.innerHTML = '&#9660';
+        }
+        table_state.data = sortData(table_state.data, content.toLowerCase(), order[content]);
+        buildTableData();
+      })
+      // column.addEventListener('mouseover', (event) => {
+      //   getComputedStyle(column,':before')
+      // })
   })
 }
 
@@ -333,9 +336,18 @@ function buildSelect() {
     optionHTML += `<label>Wszystko
     <input type=\"radio\" name=${aria_label} value="Wszystko"></label>`;
     var options = findUniqueValues(aria_label);
-    for (let i = 0; i < options.length; i++) {
-      optionHTML += `<label>${options[i]}
-      <input type=\"radio\" name=${aria_label} value="${options[i]}"></label>`;
+    if (aria_label == 'data utworzenia') {
+      for (let i = 0; i < options.length; i++) {
+        let option = new Date(options[i]).toLocaleDateString();
+        optionHTML += `<label>${option}
+      <input type=\"radio\" name=${aria_label} value="${option}"></label>`;
+      }
+    } else {
+      for (let i = 0; i < options.length; i++) {
+        let option = options[i];
+        optionHTML += `<label>${option}
+      <input type=\"radio\" name=${aria_label} value="${option}"></label>`;
+      }
     }
     // console.log(optionHTML)
     options_container.innerHTML = optionHTML;
@@ -373,6 +385,7 @@ function findUniqueValues(property) {
 }
 
 function sortData(data, property, order = 'desc') {
+  console.log(property)
   if (order == 'asc') {
     return data.sort((a, b) => a.properties[property].localeCompare(b.properties[property]));
   }
