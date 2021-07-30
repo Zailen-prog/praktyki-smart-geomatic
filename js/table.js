@@ -23,7 +23,7 @@ var filters = {
   'nazwa': 'Wszystko',
   'typ': 'Wszystko',
   'podtyp': 'Wszystko',
-  'data utworzenia': 'Wszystko',
+  'data': [new Date('0001'), new Date()],
   'województwo': 'Wszystko',
   'powierzchnia': 'Wszystko',
 }
@@ -80,7 +80,7 @@ filter_close.addEventListener('click', () => {
   filter_mask.style.pointerEvents = 'none';
 })
 
-const filter_selects = document.querySelectorAll('.filter-selects-wrapper div');
+const filter_selects = document.querySelectorAll('.filter-selects-wrapper div[aria-label]');
 filter_selects.forEach(select => {
   select.addEventListener('click', () => {
     const select_options = document.querySelector(`.filter-select-options[data-name="${select.getAttribute('aria-label')}"]`);
@@ -106,6 +106,22 @@ filter_selects.forEach(select => {
     select_options.style.transform = "scale(1)";
   })
 })
+
+const filter_dates = document.querySelectorAll('.filter-date input');
+filter_dates.forEach(filter_date => {
+  filter_date.addEventListener('blur', (event) => {
+    if (event.target.getAttribute('name') == 'data-od') {
+      filters['data'][0] = isNaN(new Date(event.target.value)) ? new Date('0001') : new Date(event.target.value);
+    } else {
+      filters['data'][1] = isNaN(new Date(event.target.value)) ? new Date() : new Date(event.target.value);
+    }
+    var filtered_data = filterData(filters);
+    table_state.data = filtered_data.features;
+    PomnikiDataPromise.then(dataset => dataset.setData(filtered_data));
+    buildTableData();
+  })
+})
+
 
 const filter_options = document.querySelector('.filter-options');
 filter_options.addEventListener('click', (event) => {
@@ -206,7 +222,12 @@ function filterData(filter) {
   for (let i = 0; i < geoData.features.length; i++) {
     var flag = 1;
     for (var property in filter) {
-      if (!(geoData.features[i].properties[property] == filter[property] || filter[property] == 'Wszystko')) {
+      if (property == 'data') {
+        if (!(dateInRange(new Date(geoData.features[i].properties['data utworzenia']), filter[property][0], filter[property][1]))) {
+          flag = 0;
+          break;
+        }
+      } else if (!(geoData.features[i].properties[property] == filter[property] || filter[property] == 'Wszystko')) {
         flag = 0;
         break;
       }
@@ -214,6 +235,12 @@ function filterData(filter) {
     if (flag) filteredData.features.push(geoData.features[i]);
   }
   return filteredData;
+}
+
+function dateInRange(date, start, end) {
+  return (
+    start <= date && date <= end
+  );
 }
 
 function pagination(data, rows, page) {
@@ -328,7 +355,7 @@ function buildTableHeader() {
 }
 
 function buildSelect() {
-  const selects = document.querySelectorAll('.filter-selects-wrapper div')
+  const selects = document.querySelectorAll('.filter-selects-wrapper div[aria-label]')
   selects.forEach(select => {
     var aria_label = select.getAttribute('aria-label');
     var options_container = document.querySelector(`.filter-select-options[data-name='${aria_label}']`);
@@ -385,7 +412,6 @@ function findUniqueValues(property) {
 }
 
 function sortData(data, property, order = 'desc') {
-  console.log(property)
   if (order == 'asc') {
     return data.sort((a, b) => a.properties[property].localeCompare(b.properties[property]));
   }

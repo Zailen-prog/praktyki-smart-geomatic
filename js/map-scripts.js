@@ -318,8 +318,8 @@ function onMapActions() {
       const target = mapApi.query(coords, { layers });
       if (target.length >= 1) {
 
-        mapApi.layer('points_clicked').setFilter(['==', ['get', 'gid'], target[0].properties.gid]);
-        mapApi.layer('points_clicked').show();
+        // mapApi.layer('points_clicked').setFilter(['==', ['get', 'gid'], target[0].properties.gid]);
+        // mapApi.layer('points_clicked').show();
 
         const objectProperties = {
           ...target[0].properties

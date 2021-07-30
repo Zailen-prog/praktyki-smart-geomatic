@@ -99,6 +99,8 @@
   box-shadow: 0 0px 4px var(--box-shadow-color);
   transform-origin: top right;
   transition: 0.1s;
+  display: flex;
+  flex-direction: column;
 }
 
 .filter-header {
@@ -125,67 +127,23 @@
   margin: 10px;
 }
 
-.filter-fieldset {
+.filter-container {
   width: 100%;
-  border: 0;
-  margin: 0;
-  display: inline-flex;
-  padding: 0;
-  position: relative;
-  min-width: 0;
-  flex-direction: column;
-  vertical-align: top;
-  box-shadow: 0 1px 1px var(--box-shadow-color);
+  overflow: auto;
 }
 
-.filter-fieldset-obiekt {
-  margin-left: auto;
-  padding-top: 15px;
-  margin-right: auto;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+.filter-container::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
 }
 
-.filter-fieldset label {
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  margin-right: 16px;
-  margin-left: 16px;
-  vertical-align: middle;
-  flex-direction: column;
-  padding-bottom: 16px;
+.filter-container:hover::-webkit-scrollbar-thumb {
+  background: var(--bg-color-scroll-thumb);
 }
 
-.filter-fieldset img {
-  width: 32px;
-}
-
-.filter-fieldset input {
-  display: none;
-}
-
-#filter-fieldset-all {
-  height: 24px;
-  width: 24px;
-  border-radius: 16px;
-  border-style: solid;
-  border-width: 4px;
-  border-color: var(--map-cluster-color);
-  background: var(--bg-color);
-}
-
-.filter-fieldset-custom-input {
-  margin-top: 10px;
-  border-radius: 0.5px;
-  width: 5px;
-  height: 5px;
-  box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 3px var(--fg-color-button);
-}
-
-.filter-fieldset input:checked+.filter-fieldset-custom-input {
-  background: var(--fg-color-button);
+.filter-container::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: transparent;
 }
 
 .filter-selects-wrapper {
@@ -197,7 +155,7 @@
   width: 100%;
 }
 
-.filter-selects-wrapper>div {
+.filter-selects-wrapper>div[aria-label] {
   position: relative;
   margin-block: 40px;
   margin-inline: 20px;
@@ -208,11 +166,11 @@
   cursor: pointer;
 }
 
-.filter-selects-wrapper>div:hover {
+.filter-selects-wrapper>div[aria-label]:hover {
   box-shadow: 0 2px 0 -1px var(--fg-color);
 }
 
-.filter-selects-wrapper>div::before {
+.filter-selects-wrapper>div[aria-label]::before {
   content: attr(aria-label);
   position: absolute;
   font-size: 11px;
@@ -220,7 +178,7 @@
   top: -20px;
 }
 
-.filter-selects-wrapper>div::after {
+.filter-selects-wrapper>div[aria-label]::after {
   position: absolute;
   top: 50%;
   right: 0px;
@@ -229,11 +187,47 @@
   font-size: 10px;
 }
 
-.filter-selects-wrapper>div>span {
+.filter-selects-wrapper>div[aria-label]>span {
   display: inline-block;
   width: calc(100% - 15px);
   overflow-x: hidden;
   white-space: nowrap;
+}
+
+.filter-date {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  position: relative;
+  margin-block: 40px;
+  margin-inline: 20px;
+  width: 35%;
+  min-width: 200px;
+}
+
+.filter-date::before {
+  content: 'data utworzenia';
+  position: absolute;
+  font-size: 11px;
+  opacity: 0.7;
+  top: -20px;
+}
+
+.filter-date label {
+  width: fit-content;
+}
+
+.filter-date input {
+  max-width: fit-content;
+  border: none;
+  color: var(--fg-color);
+  background: var(--bg-color);
+  margin-left: 10px;
+}
+
+.filter-date input::-webkit-calendar-picker-indicator {
+  display: none;
 }
 
 .filter-options {
@@ -358,6 +352,10 @@
   .filter-wrapper {
     max-width: 60%;
     font-size: 16px;
+  }
+  .filter-date,
+  .filter-selects-wrapper>div[aria-label] {
+    margin-block: 25px;
   }
 }
 

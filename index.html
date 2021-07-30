@@ -224,34 +224,42 @@
         </svg>
       </button>
       </div>
-      <fieldset class="filter-fieldset">
+      <div class="filter-container">
         <div class="filter-selects-wrapper">
-          <div id="table-filter-obiekt" aria-label="obiekt">
+          <div aria-label="obiekt">
             <span>Wszystko</span>
           </div>
-          <div id="table-filter-gatunek" aria-label="gatunek">
+          <div aria-label="gatunek">
             <span>Wszystko</span>
           </div>
-          <div id="table-filter-nazwa" aria-label="nazwa">
+          <div aria-label="nazwa">
             <span>Wszystko</span>
           </div>
-          <div id="table-filter-typ" aria-label="typ">
+          <div aria-label="typ">
             <span>Wszystko</span>
           </div>
-          <div id="table-filter-podtyp" aria-label="podtyp">
+          <div aria-label="podtyp">
             <span>Wszystko</span>
           </div>
-          <div id="table-filter-województwo" aria-label="województwo">
+          <div aria-label="województwo">
             <span>Wszystko</span>
           </div>
-          <div id="table-filter-data" aria-label="data utworzenia">
+          <div aria-label="powierzchnia">
             <span>Wszystko</span>
           </div>
-          <div id="table-filter-powierzchnia" aria-label="powierzchnia">
-            <span>Wszystko</span>
+          <div class="filter-date">
+            <label>
+              Od:
+              <input type="date" name="data-od">
+            </label>
+            <label>
+              Do:
+              <input type="date" name="data-do">
+            </label>
+            <!-- <span>Wszystko</span> -->
           </div>
         </div>
-      </fieldset>
+      </div>
     </div>
   </div>
   <div class="filter-options">
@@ -261,8 +269,8 @@
     <div class="filter-select-options" data-name="typ"></div>
     <div class="filter-select-options" data-name="podtyp"></div>
     <div class="filter-select-options" data-name="województwo"></div>
-    <div class="filter-select-options" data-name="data utworzenia"></div>
     <div class="filter-select-options" data-name="powierzchnia"></div>
+    <!-- <div class="filter-select-options" data-name="data utworzenia"></div> -->
   </div>
   <div class="filter-columns">
     <div class="filter-columns-wrapper">
