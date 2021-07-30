@@ -146,7 +146,7 @@
   width: max-content;
   padding: 7px;
   border-radius: 3px;
-  transform-origin: right center;
+  transform-origin: center;
   box-shadow: 0 1px 1px var(--box-shadow-color);
 }
 
