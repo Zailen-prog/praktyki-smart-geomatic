@@ -2,7 +2,7 @@ var table_state = {
   'data': [],
   'page': 1,
   'rows': 10,
-}
+};
 
 var max_pages;
 
@@ -26,7 +26,7 @@ var filters = {
   'data': [new Date('0001'), new Date()],
   'województwo': 'Wszystko',
   'powierzchnia': 'Wszystko',
-}
+};
 
 const table_wrapper = document.getElementById('table-wrapper');
 const table_open_button = document.getElementById('table-show-button');
@@ -78,6 +78,36 @@ const filter_close = document.querySelector('.filter-close-button');
 filter_close.addEventListener('click', () => {
   filter_wrapper.style.transform = 'scale(0)';
   filter_mask.style.pointerEvents = 'none';
+})
+
+const filter_clear = document.querySelector('.filter-clear-button');
+filter_clear.addEventListener('click', () => {
+  filters = {
+    'obiekt': 'Wszystko',
+    'gatunek': 'Wszystko',
+    'nazwa': 'Wszystko',
+    'typ': 'Wszystko',
+    'podtyp': 'Wszystko',
+    'data': [new Date('0001'), new Date()],
+    'województwo': 'Wszystko',
+    'powierzchnia': 'Wszystko',
+  };
+  var filtered_data = filterData(filters);
+  table_state.data = filtered_data.features;
+  PomnikiDataPromise.then(dataset => dataset.setData(filtered_data));
+  buildTableData();
+  const selects = document.querySelectorAll('.filter-selects-wrapper div[aria-label]');
+  selects.forEach(select => {
+    select.innerHTML = `<span>${filters[select.getAttribute('aria-label')]}</span>`
+  })
+  const select_dates = document.querySelectorAll('.filter-date input');
+  select_dates.forEach(select_date => {
+    if (select_date.getAttribute('name') == 'data-od') {
+      select_date.value = '';
+    } else {
+      select_date.value = '';
+    }
+  })
 })
 
 const filter_selects = document.querySelectorAll('.filter-selects-wrapper div[aria-label]');

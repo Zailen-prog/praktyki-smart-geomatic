@@ -3,17 +3,20 @@
   position: relative;
   height: 60px;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .table-filter-columns,
 .table-filter-open {
-  position: absolute;
+  position: relative;
   width: 40px;
   height: 40px;
   border-radius: 0;
   box-shadow: none;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-inline: 10px;
 }
 
 .table-filter-columns svg,
@@ -21,19 +24,11 @@
   margin: 10px;
 }
 
-.table-filter-open {
-  z-index: 900;
-  right: 60px;
-}
-
-.table-filter-columns {
-  right: 110px;
-}
-
 .table-filter-columns::after,
 .table-filter-columns::before,
 .table-filter-open::after,
 .table-filter-open::before {
+  z-index: 900;
   pointer-events: none;
   --scale: 0;
   --arrow-size: 8px;
@@ -125,6 +120,59 @@
 
 #filter-close-svg {
   margin: 10px;
+}
+
+.filter-clear-button {
+  position: absolute;
+  top: 0;
+  right: 50px;
+  width: 40px;
+  height: 40px;
+  box-shadow: none;
+  border-radius: 0;
+  float: right;
+}
+
+.filter-clear-button svg {
+  margin: 7px;
+}
+
+.filter-clear-button::after,
+.filter-clear-button::before {
+  pointer-events: none;
+  --scale: 0;
+  --arrow-size: 8px;
+  position: absolute;
+  content: "";
+  top: 50%;
+  left: -3px;
+  transform: translateY(-50%) translateX(var(--translate-x, 0)) scale(var(--scale));
+  transition: 150ms transform;
+}
+
+.filter-clear-button::before {
+  --translate-x: calc(-100% - var(--arrow-size));
+  content: attr(aria-label);
+  background-color: var(--bg-color);
+  color: var(--fg-color-text);
+  width: 10px;
+  width: max-content;
+  padding: 7px;
+  border-radius: 3px;
+  transform-origin: right center;
+  box-shadow: 0 1px 1px var(--box-shadow-color);
+}
+
+.filter-clear-button::after {
+  transform-origin: left center;
+  --translate-x: calc(-1 * var(--arrow-size) - 1px);
+  border: var(--arrow-size) solid transparent;
+  border-left-color: var(--bg-color);
+}
+
+.filter-clear-button:hover::after,
+.filter-clear-button:hover::before {
+  --scale: 1;
 }
 
 .filter-container {
