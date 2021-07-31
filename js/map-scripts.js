@@ -1,21 +1,11 @@
-/**
- * JS file
- */
-
-/**
- * *************************************************
- * 1. Creating all neceserry map variables and objects
- * *************************************************
- */
-
-// 1.1 account id (account id from which map will be downloaded)
+// account id (account id from which map will be downloaded)
 const accountId = 'carto.NVYBik';
-// 1.2 map ids (id of a map that will be downloaded from account with specified id)
-//  1.2.1 map id with light theme
+// map ids (id of a map that will be downloaded from account with specified id)
+//  map id with light theme
 const brightId = 'NxpJokfIoI';
-//  1.2.2 map id with dark theme
+//   map id with dark theme
 const darkId = 'E1KFkOvIyh';
-// 1.3 map configuration (map options)
+// map configuration (map options)
 const starting_position = {
   center: [19, 52],
   zoom: 6,
@@ -29,19 +19,17 @@ var map_options = {
   minZoom: 1,
 };
 
-// 1.4 map authenticator (getting authenitactor for our map to know which map has to be downloaded)
+//map authenticator (getting authenitactor for our map to know which map has to be downloaded)
 const authenticator = mapId => window.opalSdk.MapAuthenticator.fromUrl(
   `https://map.nmaps.pl/${accountId}/${mapId}`
 );
-// 1.5 map instance (variable that will store map instance object on which all map actions will be performed)
+// map instance (variable that will store map instance object on which all map actions will be performed)
 // assignment will happend upon map creation -> see createMap and onCreate functions
 var mapApi;
 
-// 1.6 geo data will store fetched geojson object with Pomniki Przyrody points
-// assignemnt will happend when all data is fethed from file -> see PomnikiDataPromise
+
 var geoData;
 
-// 1.7 icons array (stores url and id for each icon that will be added to the map)
 const icons = [
   { url: 'images/icons/drzewo.png', id: 'drzewo' },
   { url: 'images/icons/głaz narzutowy.png', id: 'głaz narzutowy' },
@@ -56,12 +44,20 @@ const icons = [
   { url: 'images/icons/inne.png', id: 'inne' },
 ];
 
-/**
- * *************************************************
- * 2. Creating promises to ensure synchronicity
- * *************************************************
- */
-// 2.1 PomnikiIconsPromise
+const icons_clicked = [
+  { url: 'images/icons_clicked/drzewo_clicked.png', id: 'drzewo_clicked' },
+  { url: 'images/icons_clicked/głaz narzutowy_clicked.png', id: 'głaz narzutowy_clicked' },
+  { url: 'images/icons_clicked/krzew_clicked.png', id: 'krzew_clicked' },
+  { url: 'images/icons_clicked/skałka_clicked.png', id: 'skałka_clicked' },
+  { url: 'images/icons_clicked/jaskinia_clicked.png', id: 'jaskinia_clicked' },
+  { url: 'images/icons_clicked/grupa drzew_clicked.png', id: 'grupa drzew_clicked' },
+  { url: 'images/icons_clicked/jar_clicked.png', id: 'jar_clicked' },
+  { url: 'images/icons_clicked/aleja_clicked.png', id: 'aleja_clicked' },
+  { url: 'images/icons_clicked/wodospad_clicked.png', id: 'wodospad_clicked' },
+  { url: 'images/icons_clicked/źródło_clicked.png', id: 'źródło_clicked' },
+  { url: 'images/icons_clicked/inne_clicked.png', id: 'inne_clicked' },
+];
+
 // upon resolve returns object with created bitmap data and id for each icon
 
 function fetchIMG(url) {
@@ -99,7 +95,21 @@ const PomnikiIconsPromise = new Promise((resolve) => {
   ).then(resolve)
 });
 
-// 2.2 PomnikiDataPromise
+const PomnikiIconsClickedPromise = new Promise((resolve) => {
+  Promise.all(
+    icons_clicked.map(img => new Promise((resolve) => {
+      fetchIMG(img.url)
+        .then(image => {
+          return {
+            'data': image,
+            'id': img.id
+          }
+        })
+        .then(resolve)
+    }))
+  ).then(resolve)
+});
+
 // upon resolve returns dataset with points for each Pomnik
 const PomnikiDataPromise =
   fetchJSON('data/PomnikiPrzyrody/data.json')
@@ -113,6 +123,14 @@ const PomnikiDataPromise =
     })
   });
 
+const PomnikiClickedDataPromise =
+  fetchJSON('data/PomnikiPrzyrody/data.json')
+  .then(data => {
+    return window.opalSdk.createDataset('pomniki', {
+      data: data,
+    })
+  });
+
 // 2.3 WojewodztwaPromise
 // upon resolve returns dataset with polygons for each wojewodztwo
 const WojewodztwaPromise =
@@ -123,13 +141,8 @@ const WojewodztwaPromise =
     });
   })
 
-/**
- * ************************************************
- * 3. Creating all event listeners that efects map
- * ************************************************
- */
 
-// 3.1 theme toogle buton
+// theme toogle buton
 document.getElementById('theme-toggle')
   .addEventListener("click", () => {
     document.querySelector('.loading-screen-wrapper').style.display = 'block'
@@ -146,19 +159,19 @@ document.getElementById('theme-toggle')
       enLightMode();
   });
 
-// 3.2 close properties window button
+// close properties window button
 document.getElementById('click-properties-close')
   .addEventListener('click', () => {
     document.getElementById('click-properties-container').style.left = "-480px";
-    mapApi.layer('points_clicked').hide();
+    mapApi.layer('pomniki_clicked').hide();
   });
 
-// 3.3 starting position button
+// starting position button
 document.getElementById('Default-position')
   .addEventListener('click', () => {
     mapApi.flyTo(starting_position)
   });
-// 3.4 zoom in button
+// zoom in button
 document.getElementById('zoom-in')
   .addEventListener('click', () => {
     const zoom = mapApi.zoom + 1;
@@ -166,7 +179,7 @@ document.getElementById('zoom-in')
       zoom: zoom,
     })
   });
-// 3.5 zoom out button
+// zoom out button
 document.getElementById('zoom-out')
   .addEventListener('click', () => {
     const zoom = mapApi.zoom - 1;
@@ -189,11 +202,6 @@ legend_button.addEventListener('click', function() {
   }
 });
 
-/**
- * *************************
- * 4.
- * *************************
- */
 
 // on enter load map with prefered color scheme
 window.onload = () => {
@@ -204,17 +212,10 @@ window.onload = () => {
   }
 }
 
-/**
- * ************************************************
- * 5. Functions decleration
- * ************************************************
- */
-// 5.1 onCreate
 // callled when map instance is succesfully created
 function onCreate(map) {
   mapApi = map;
 };
-// 5.2 createMap
 // function that creates map with all its functions and layers
 function createMap(mapId) {
   window.opalSdk
@@ -225,7 +226,6 @@ function createMap(mapId) {
 }
 
 const body_element = document.body;
-// 5.3 enDarkMode
 // function that changes theme to dark
 function enDarkMode() {
   body_element.classList.add('dark_theme');
@@ -234,7 +234,6 @@ function enDarkMode() {
   createMap(darkId);
 }
 
-// 5.4 enLightMode
 // function that changes theme to light
 function enLightMode() {
   body_element.classList.add('light_theme');
@@ -243,7 +242,6 @@ function enLightMode() {
   createMap(brightId);
 }
 
-// 5.5 onMapActions
 // impelements all actions that are performed on map instance
 function onMapActions() {
   var popup;
@@ -261,6 +259,26 @@ function onMapActions() {
               PomnikiDataPromise
                 .then(dataset => {
                   createLayers(mapApi, dataset, 'pomniki');
+                });
+            });
+
+          PomnikiIconsClickedPromise
+            .then(images => images.forEach((image) => {
+              mapApi.images().add(image.id, image.data, { 'sdf': true })
+            }))
+            .then(() => {
+              PomnikiClickedDataPromise
+                .then(dataset => {
+                  mapApi.addData(dataset, {
+                    id: 'pomniki_clicked',
+                    type: 'symbol',
+                    layout: {
+                      'icon-allow-overlap': true,
+                      'icon-image': ['concat', ['get', 'obiekt'], '_clicked'],
+                      'icon-size': 0.24,
+                    },
+                  });
+                  mapApi.layer('pomniki_clicked').hide();
                 });
             });
 
@@ -331,8 +349,8 @@ function onMapActions() {
       const target = mapApi.query(coords, { layers });
       if (target.length >= 1) {
 
-        // mapApi.layer('points_clicked').setFilter(['==', ['get', 'gid'], target[0].properties.gid]);
-        // mapApi.layer('points_clicked').show();
+        mapApi.layer('pomniki_clicked').setFilter(['==', ['get', 'gid'], target[0].properties.gid]);
+        mapApi.layer('pomniki_clicked').show();
 
         const objectProperties = {
           ...target[0].properties
@@ -344,8 +362,6 @@ function onMapActions() {
   })
 }
 
-
-// 5.7 createLayers
 // creates layers for points
 function createLayers(mapApi, data, layer_id) {
   mapApi.addData(data, {
