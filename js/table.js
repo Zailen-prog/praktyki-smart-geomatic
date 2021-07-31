@@ -28,6 +28,8 @@ var filters = {
   'powierzchnia': 'Wszystko',
 };
 
+var options = {};
+
 const table_wrapper = document.getElementById('table-wrapper');
 const table_open_button = document.getElementById('table-show-button');
 const table_open = document.querySelector("#table-open");
@@ -113,17 +115,17 @@ filter_clear.addEventListener('click', () => {
 const filter_selects = document.querySelectorAll('.filter-selects-wrapper div[aria-label]');
 filter_selects.forEach(select => {
   select.addEventListener('click', () => {
-    const select_options = document.querySelector(`.filter-select-options[data-name="${select.getAttribute('aria-label')}"]`);
+    const select_options = document.querySelector(`.filter-select-container[data-name="${select.getAttribute('aria-label')}"]`);
     document.querySelector('.filter-options').style.pointerEvents = 'auto';
     var rect = select.getBoundingClientRect();
     select_options.style.width = `${select.offsetWidth}px`;
 
     if (select_options.offsetHeight > window.innerHeight - rect.bottom) {
-      select_options.style.bottom = '20px';
-      select_options.style.top = 'initial';
+      select_options.style.top = `${window.innerHeight - select_options.offsetHeight - 20}px`;
+      // select_options.style.top = 'initial';
     } else {
       select_options.style.top = `${rect.top}px`;
-      select_options.style.bottom = 'initial';
+      // select_options.style.bottom = 'initial';
     }
 
     if (select_options.offsetWidth > window.innerWidth - rect.left) {
@@ -157,11 +159,32 @@ const filter_options = document.querySelector('.filter-options');
 filter_options.addEventListener('click', (event) => {
   if (event.target.classList.contains('filter-options')) {
     filter_options.style.pointerEvents = 'none';
-    document.querySelectorAll('.filter-select-options').forEach(select => {
+    document.querySelectorAll('.filter-select-container').forEach(select => {
       select.style.transform = 'scale(0)';
+      select.querySelector('input[type=\'text\']').value = '';
+      select.querySelectorAll('filter-select-options label').forEach(label => {
+        label.style.display = 'block';
+      })
     })
   }
 })
+
+const filter_search_options = document.querySelectorAll('.filter-select-container input[type=\'text\']')
+filter_search_options.forEach(search => {
+  var data_name = search.getAttribute('data-name');
+  search.addEventListener('keyup', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    var filtered_options = [];
+    for (let i = 0; i < options[data_name].length; i++) {
+      if (options[data_name][i].toLowerCase().indexOf(searchTerm) != -1) {
+        filtered_options.push(options[data_name][i]);
+      }
+    }
+    const options_container = document.querySelector(`.filter-select-container[data-name=${data_name}]`);
+    buildSelectContent(options_container, filtered_options);
+  })
+})
+
 
 const filter_columns_open = document.querySelector('.table-filter-columns');
 const filter_columns_mask = document.querySelector('.filter-columns');
@@ -329,7 +352,7 @@ function buildTableData() {
       });
     });
   });
-  buildSelect();
+  buildSelects();
   const pagination_counter = document.querySelector('.table-pagination-counter');
   if (table_state.page > 0) {
     pagination_counter.innerHTML =
@@ -384,43 +407,46 @@ function buildTableHeader() {
   })
 }
 
-function buildSelect() {
+function buildSelects() {
   const selects = document.querySelectorAll('.filter-selects-wrapper div[aria-label]')
   selects.forEach(select => {
     var aria_label = select.getAttribute('aria-label');
-    var options_container = document.querySelector(`.filter-select-options[data-name='${aria_label}']`);
-    var optionHTML = "";
-    optionHTML += `<label>Wszystko
-    <input type=\"radio\" name=${aria_label} value="Wszystko"></label>`;
-    var options = findUniqueValues(aria_label);
-    if (aria_label == 'data utworzenia') {
-      for (let i = 0; i < options.length; i++) {
-        let option = new Date(options[i]).toLocaleDateString();
-        optionHTML += `<label>${option}
-      <input type=\"radio\" name=${aria_label} value="${option}"></label>`;
-      }
-    } else {
-      for (let i = 0; i < options.length; i++) {
-        let option = options[i];
-        optionHTML += `<label>${option}
-      <input type=\"radio\" name=${aria_label} value="${option}"></label>`;
-      }
-    }
-    // console.log(optionHTML)
-    options_container.innerHTML = optionHTML;
-    options_container.querySelectorAll('input').forEach(option => {
-      option.addEventListener('click', (event) => {
-        event.cancelBubble = true;
-        event.preventDefault();
-        options_container.style.transform = "scale(0)";
-        filter_options.style.pointerEvents = 'none';
+    var options_container = document.querySelector(`.filter-select-container[data-name='${aria_label}']`);
+
+    options[aria_label] = findUniqueValues(aria_label);
+    buildSelectContent(options_container, options[aria_label]);
+  });
+}
+
+function buildSelectContent(options_container, data) {
+  var optionHTML = ``;
+  const data_name = options_container.getAttribute('data-name')
+  for (let i = 0; i < data.length; i++) {
+    let option = data[i];
+    optionHTML += `<label>${option}
+      <input type=\"radio\" name=${data_name} value="${option}"></label>`;
+  }
+
+  const select_options = options_container.querySelector('.filter-select-options');
+
+  const select = document.querySelector(`.filter-selects-wrapper div[aria-label=${data_name}]`);
+
+  select_options.innerHTML = optionHTML;
+  options_container.querySelectorAll('input[type=\'radio\']').forEach(option => {
+    option.addEventListener('click', (event) => {
+      event.cancelBubble = true;
+      event.preventDefault();
+      options_container.style.transform = "scale(0)";
+      options_container.querySelector('input[type=\'text\']').value = '';
+      filter_options.style.pointerEvents = 'none';
+      if (select.querySelector('span').innerHTML != option.value) {
         select.querySelector('span').innerHTML = option.value;
-        filters[aria_label] = option.value;
+        filters[data_name] = option.value;
         var filtered_data = filterData(filters);
         table_state.data = filtered_data.features;
         PomnikiDataPromise.then(dataset => dataset.setData(filtered_data));
         buildTableData();
-      });
+      }
     });
   });
 }

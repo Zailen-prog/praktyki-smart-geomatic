@@ -251,6 +251,7 @@ function onMapActions() {
   var popup_coords;
   mapApi.event$.subscribe((event) => {
     if (event.type === 'load') {
+
       new Promise(resolve => {
           PomnikiIconsPromise
             .then(images => images.forEach((image) => {

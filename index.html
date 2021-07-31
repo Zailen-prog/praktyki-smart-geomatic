@@ -260,21 +260,55 @@
               Do:
               <input type="date" name="data-do">
             </label>
-            <!-- <span>Wszystko</span> -->
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="filter-options">
-    <div class="filter-select-options" data-name="obiekt"></div>
-    <div class="filter-select-options" data-name="gatunek"></div>
-    <div class="filter-select-options" data-name="nazwa"></div>
-    <div class="filter-select-options" data-name="typ"></div>
-    <div class="filter-select-options" data-name="podtyp"></div>
-    <div class="filter-select-options" data-name="województwo"></div>
-    <div class="filter-select-options" data-name="powierzchnia"></div>
-    <!-- <div class="filter-select-options" data-name="data utworzenia"></div> -->
+    <div class="filter-select-container" data-name="obiekt">
+      <label>Wszystko
+        <input type="radio" name="obiekt" value="Wszystko"></label>
+      <input type="text" data-name="obiekt" placeholder="Wyszukaj po obiekcie">
+      <div class="filter-select-options"></div>
+    </div>
+    <div class="filter-select-container" data-name="gatunek">
+      <label>Wszystko
+        <input type="radio" name="gatunek" value="Wszystko"></label>
+      <input type="text" data-name="gatunek" placeholder="Wyszukaj po gatunku">
+      <div class="filter-select-options"></div>
+    </div>
+    <div class="filter-select-container" data-name="nazwa">
+      <label>Wszystko
+        <input type="radio" name="nazwa" value="Wszystko"></label>
+      <input type="text" data-name="nazwa" placeholder="Wyszukaj po nazwie">
+      <div class="filter-select-options"></div>
+    </div>
+    <div class="filter-select-container" data-name="typ">
+      <label>Wszystko
+        <input type="radio" name="typ" value="Wszystko"></label>
+      <input type="text" data-name="typ" placeholder="Wyszukaj po typie">
+      <div class="filter-select-options"></div>
+    </div>
+    <div class="filter-select-container" data-name="podtyp">
+      <label>Wszystko
+        <input type="radio" name="podtyp" value="Wszystko"></label>
+      <input type="text" data-name="podtyp" placeholder="Wyszukaj po podtypie">
+      <div class="filter-select-options"></div>
+    </div>
+    <div class="filter-select-container" data-name="województwo">
+      <label>Wszystko
+        <input type="radio" name="województwo" value="Wszystko"></label>
+      <input type="text" data-name="województwo" placeholder="Wyszukaj po województwie">
+      <div class="filter-select-options"></div>
+    </div>
+    <div class="filter-select-container" data-name="powierzchnia">
+      <label>Wszystko
+        <input type="radio" name="powierzchnia" value="Wszystko"></label>
+      <input type="text" data-name="powierzchnia" placeholder="Wyszukaj po powierzchni">
+      <div class="filter-select-options"></div>
+    </div>
+    <!-- <div class="filter-select-container" data-name="data utworzenia"></div> -->
   </div>
   <div class="filter-columns">
     <div class="filter-columns-wrapper">
