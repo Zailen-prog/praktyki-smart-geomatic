@@ -193,13 +193,13 @@ const filter_columns = document.querySelectorAll('.filter-select-columns');
 
 filter_columns_open.addEventListener('click', () => {
   filter_columns_mask.style.pointerEvents = 'auto';
-  filter_columns_wrapper.style.transform = 'scale(1)';
+  filter_columns_wrapper.style.transform = 'scale(1) translateY(-50%)';
 })
 
 filter_columns_mask.addEventListener('click', (event) => {
   if (event.target.classList.contains('filter-columns')) {
     filter_columns_mask.style.pointerEvents = 'none';
-    filter_columns_wrapper.style.transform = 'scale(0)';
+    filter_columns_wrapper.style.transform = 'scale(0) translateY(-50%)';
   }
 })
 
@@ -389,21 +389,18 @@ function buildTableHeader() {
     const content = column.textContent;
     order[content] = 'asc';
     column.addEventListener('click', () => {
-        const arrow = column.querySelector('div');
-        order[content] = order[content] == 'asc' ? 'desc' : 'asc';
-        document.querySelectorAll(".table-content-header th div")
-          .forEach(el => el.innerHTML = '');
-        if (order[content] == 'asc') {
-          arrow.innerHTML = '&#9650';
-        } else {
-          arrow.innerHTML = '&#9660';
-        }
-        table_state.data = sortData(table_state.data, content.toLowerCase(), order[content]);
-        buildTableData();
-      })
-      // column.addEventListener('mouseover', (event) => {
-      //   getComputedStyle(column,':before')
-      // })
+      const arrow = column.querySelector('div');
+      order[content] = order[content] == 'asc' ? 'desc' : 'asc';
+      document.querySelectorAll(".table-content-header th div")
+        .forEach(el => el.innerHTML = '');
+      if (order[content] == 'asc') {
+        arrow.innerHTML = '&#9650';
+      } else {
+        arrow.innerHTML = '&#9660';
+      }
+      table_state.data = sortData(table_state.data, content.toLowerCase(), order[content]);
+      buildTableData();
+    })
   })
 }
 
